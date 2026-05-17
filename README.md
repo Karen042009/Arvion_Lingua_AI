@@ -7,7 +7,7 @@ A powerful Telegram bot for language learning, AI-powered voice chat, and transl
 
 ## 🚀 Hackathon Sprint Features 
 
-During the **Quick with Gemini Hackathon**, we optimized our core interactions and added a new transparency command:
+During the **Hackathon**, we optimized our core interactions and added a new transparency command:
 - 📊 **`/models` Command** — Real-time transparency showing the ranked priority queue of available Gemini models on the active API key and showing the dynamic self-healing status.
 - 🎤 **Gemini Voice Chat** — Send voice messages, get text + voice AI responses with Gemini transcription.
 - 🏆 **Smart Model Auto-Ranking** — Dynamic model exploration and fallback logic tailored for maximum uptime.
