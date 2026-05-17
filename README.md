@@ -1,5 +1,5 @@
 # Arvion Lingua AI 🤖🌍
-### 🏆 Developed for *Quick With Gemini Hackathon 2026*
+### 🏆 Developed for *Hackathon*
 
 A powerful Telegram bot for language learning, AI-powered voice chat, and translation — built on Google Gemini AI.
 
