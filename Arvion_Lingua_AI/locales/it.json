@@ -78,5 +78,24 @@
   "roleplay_started": "🎭 Modalità gioco di ruolo attivata! Ora agirò come descritto nello scenario. Cominciamo!",
   "persona_cafe": "Sei un barista amichevole in un bar di un paese dove si parla {lang}. L'utente è un cliente. Salutalo e prendi la sua ordinazione. Prova a vendergli un pasticcino. Sii paziente se commette errori.",
   "persona_hotel": "Sei un receptionist d'albergo disponibile in un paese dove si parla {lang}. L'utente è un ospite che cerca di fare il check-in. Chiedi il nome della prenotazione e offri aiuto con i bagagli o informazioni sulla città.",
-  "persona_job_interview": "Sei un intervistatore severo ma giusto per una posizione di sviluppatore {lang}. L'utente è il candidato. Fagli un mix di domande tecniche e comportamentali per valutare le sue capacità."
+  "persona_job_interview": "Sei un intervistatore severo ma giusto per una posizione di sviluppatore {lang}. L'utente è il candidato. Fagli un mix di domande tecniche e comportamentali per valutare le sue capacità.",
+
+  "onboarding_step2": "✅ Ottima scelta!\n\n<b>Passo 2 / 4 — Scegli la modalità di apprendimento:</b>",
+  "onboarding_step3_human": "✅ Capito!\n\n<b>Passo 3 / 4 — Quale lingua vuoi imparare?</b>",
+  "onboarding_step3_prog": "✅ Capito!\n\n<b>Passo 3 / 4 — Quale linguaggio di programmazione vuoi imparare?</b>",
+  "onboarding_step4": "✅ Quasi finito!\n\n<b>Passo 4 / 4 — Qual è il tuo livello attuale?</b>",
+  "onboarding_done": "🎉 <b>Tutto pronto!</b>\n\nIl tuo Arvion Lingua AI è pronto. Ecco cosa puoi fare:\n\n🌐 <b>Traduci</b> — testo e immagini\n🎓 <b>Impara</b> — parole, concetti, quiz\n🤖 <b>Chat</b> — chat libera o scenari di ruolo\n💾 <b>/vocab</b> — le tue parole salvate\n📊 <b>/stats</b> — i tuoi progressi\n💡 <b>/fact</b> — curiosità\n❓ <b>/help</b> — tutti i comandi\n\nCominciamo ad imparare! 🚀",
+  "help_text": "<b>❓ Arvion Lingua AI — Comandi</b>\n\n/start — Riavvia\n/menu — Menu principale\n/stats — I tuoi progressi\n/vocab — Il tuo vocabolario\n/fact — Curiosità\n/models — Modelli IA\n/help — Questo aiuto",
+  "stat_translations": "Traduzioni", "stat_words": "Parole / Concetti", "stat_quizzes": "Quiz superati", "stat_facts": "Fatti", "stat_vocab": "Parole salvate", "stat_badges": "Badge", "no_badges_yet": "Continua ad imparare per guadagnare badge!",
+  "save_word_button": "💾 Salva parola",
+  "save_word_prompt": "📖 <b>{word}</b> — {translation}\n\nVuoi salvare questa parola?",
+  "word_saved": "✅ <b>{word}</b> salvata nel tuo vocabolario. Usa /vocab per ripassare.",
+  "word_already_saved": "📖 <b>{word}</b> è già nel tuo vocabolario.",
+  "vocab_empty": "📖 Il tuo vocabolario è vuoto.\n\nInizia ad imparare parole e salvale con il pulsante 💾!",
+  "vocab_header": "📖 <b>Il tuo Vocabolario</b> ({count} parole)",
+  "vocab_tip": "\n💡 <i>Suggerimento: Salva parole durante l'apprendimento con il pulsante 💾.</i>",
+  "roleplay_doctor": "🏥 Visita medica", "roleplay_airport": "✈️ All'aeroporto", "roleplay_shopping": "🛍️ Shopping",
+  "persona_doctor": "Sei un medico amichevole in una clinica di un paese dove si parla {lang}. L'utente è un paziente che descrive i suoi sintomi. Fai domande di approfondimento e suggerisci una diagnosi semplice.",
+  "persona_airport": "Sei un agente di check-in in un aeroporto di un paese dove si parla {lang}. L'utente è un passeggero. Chiedi il codice di prenotazione e fornisci informazioni sul gate.",
+  "persona_shopping": "Sei un commesso in un negozio di abbigliamento di un paese dove si parla {lang}. L'utente è un cliente. Chiedi le sue preferenze e aiutalo con taglie e prezzi."
 }

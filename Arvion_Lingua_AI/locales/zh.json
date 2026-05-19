@@ -78,5 +78,24 @@
   "roleplay_started": "🎭 角色扮演模式已激活！我现在将按照场景描述行动。我们开始吧！",
   "persona_cafe": "您是一家在说{lang}的国家的咖啡馆里的友好咖啡师。用户是一位顾客。向他们打招呼并接受他们的点单。尝试向他们推荐一份糕点。如果他们犯了错误，请保持耐心。",
   "persona_hotel": "您是一家在说{lang}的国家的酒店里乐于助人的接待员。用户是一位试图办理入住的客人。询问他们的预订姓名，并提供行李或城市信息的帮助。",
-  "persona_job_interview": "您是一位对{lang}开发人员职位严格而公正的面试官。用户是候选人。向他们提出技术和行为问题的组合，以评估他们的技能。"
+  "persona_job_interview": "您是一位对{lang}开发人员职位严格而公正的面试官。用户是候选人。向他们提出技术和行为问题的组合，以评估他们的技能。",
+
+  "onboarding_step2": "✅ 很好的选择！\n\n<b>第 2 步 / 4 — 选择学习模式：</b>",
+  "onboarding_step3_human": "✅ 明白了！\n\n<b>第 3 步 / 4 — 您想学习哪种语言？</b>",
+  "onboarding_step3_prog": "✅ 明白了！\n\n<b>第 3 步 / 4 — 您想学习哪种编程语言？</b>",
+  "onboarding_step4": "✅ 快完成了！\n\n<b>第 4 步 / 4 — 您目前的水平是什么？</b>",
+  "onboarding_done": "🎉 <b>一切就绪！</b>\n\n您的 Arvion Lingua AI 已准备好。您可以：\n\n🌐 <b>翻译</b> — 文本和图片\n🎓 <b>学习</b> — 单词、概念、测验\n🤖 <b>聊天</b> — 自由聊天或角色扮演\n💾 <b>/vocab</b> — 您保存的单词\n📊 <b>/stats</b> — 您的进度\n💡 <b>/fact</b> — 趣味知识\n❓ <b>/help</b> — 所有命令\n\n开始学习吧！🚀",
+  "help_text": "<b>❓ Arvion Lingua AI — 命令</b>\n\n/start — 重启\n/menu — 主菜单\n/stats — 您的进度\n/vocab — 您的词汇\n/fact — 趣味知识\n/models — AI模型\n/help — 此帮助",
+  "stat_translations": "翻译", "stat_words": "单词/概念", "stat_quizzes": "测验", "stat_facts": "趣味知识", "stat_vocab": "保存的单词", "stat_badges": "徽章", "no_badges_yet": "继续学习以获得徽章！",
+  "save_word_button": "💾 保存单词",
+  "save_word_prompt": "📖 <b>{word}</b> — {translation}\n\n要将此单词保存到词汇本吗？",
+  "word_saved": "✅ <b>{word}</b> 已保存到您的词汇本。使用 /vocab 复习。",
+  "word_already_saved": "📖 <b>{word}</b> 已在您的词汇本中。",
+  "vocab_empty": "📖 您的词汇本是空的。\n\n开始学习单词并用 💾 按钮保存它们！",
+  "vocab_header": "📖 <b>您的词汇本</b>（{count} 个单词）",
+  "vocab_tip": "\n💡 <i>提示：在学习时使用 💾 按钮保存单词。</i>",
+  "roleplay_doctor": "🏥 看医生", "roleplay_airport": "✈️ 在机场", "roleplay_shopping": "🛍️ 购物",
+  "persona_doctor": "您是一位在说{lang}的国家的诊所里的友好医生。用户是一位描述症状的患者。提出后续问题并建议简单诊断。",
+  "persona_airport": "您是一位在说{lang}的国家的机场值机代理。用户是乘客。询问预订代码并提供登机口信息。",
+  "persona_shopping": "您是一位在说{lang}的国家的服装店销售员。用户是顾客。询问偏好并帮助尺码和价格。"
 }

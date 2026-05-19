@@ -17,6 +17,8 @@ from bot.handlers import (
     learning_handlers,
     chat_handlers,
 )
+from bot.handlers.onboarding_handlers import onboarding_router
+from bot.handlers.vocab_handlers import vocab_router
 
 async def main():
     logging.basicConfig(
@@ -45,11 +47,14 @@ async def main():
     dp.update.middleware(loc_middleware)
     bot.loc_middleware = loc_middleware
 
+    # Onboarding router must be first to intercept /start for new users
+    dp.include_router(onboarding_router)
     dp.include_router(common_handlers.common_router)
     dp.include_router(settings_handlers.settings_router)
     dp.include_router(translate_handlers.translate_router)
     dp.include_router(learning_handlers.learning_router)
     dp.include_router(chat_handlers.chat_router)
+    dp.include_router(vocab_router)
 
     # ------------------ Reply Keyboard Handlers ------------------
     all_translate_texts = get_all_translations("translate_button", loc_middleware.locales)

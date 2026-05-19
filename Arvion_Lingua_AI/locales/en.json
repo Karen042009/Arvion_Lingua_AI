@@ -80,5 +80,37 @@
   "persona_hotel": "You are a helpful hotel receptionist in a country where they speak {lang}. The user is a guest trying to check in. Ask for their reservation name and offer help with their luggage or information about the city.",
   "persona_job_interview": "You are a strict but fair interviewer for a {lang} developer position. The user is the candidate. Ask them a mix of technical and behavioral questions to assess their skills.",
   "could_not_understand_audio": "❌ I couldn't understand the audio. Please try speaking clearly.",
-  "voice_error": "❌ An error occurred while processing your voice message."
+  "voice_error": "❌ An error occurred while processing your voice message.",
+
+  "onboarding_step2": "✅ Great choice!\n\n<b>Step 2 / 4 — Choose your learning mode:</b>",
+  "onboarding_step3_human": "✅ Got it!\n\n<b>Step 3 / 4 — Which language do you want to learn?</b>",
+  "onboarding_step3_prog": "✅ Got it!\n\n<b>Step 3 / 4 — Which programming language do you want to learn?</b>",
+  "onboarding_step4": "✅ Almost done!\n\n<b>Step 4 / 4 — What is your current level?</b>",
+  "onboarding_done": "🎉 <b>You're all set!</b>\n\nYour Arvion Lingua AI is ready. Here's what you can do:\n\n🌐 <b>Translate</b> — text and images\n🎓 <b>Learn</b> — words, concepts, quizzes\n🤖 <b>Chat</b> — free chat or roleplay scenarios\n💾 <b>/vocab</b> — your saved words\n📊 <b>/stats</b> — your progress\n💡 <b>/fact</b> — fun facts\n❓ <b>/help</b> — all commands\n\nLet's start learning! 🚀",
+
+  "help_text": "<b>❓ Arvion Lingua AI — Commands</b>\n\n<b>Main Features:</b>\n🌐 <b>Translate</b> — Translate text or images between 13 languages\n🎓 <b>Learn</b> — Words, concepts, and quizzes\n🤖 <b>Chat</b> — Free chat or roleplay scenarios\n\n<b>Commands:</b>\n/start — Restart the bot\n/menu — Go to main menu\n/stats — View your progress &amp; badges\n/vocab — Your saved vocabulary book\n/fact — Get a fun fact about your language\n/models — View active AI models\n/help — Show this message\n\n<b>Tips:</b>\n• 🎤 Send a voice message in Chat mode\n• 📷 Send a photo in Translate mode\n• 💾 Save words to your vocabulary book\n• 🔥 Keep your daily streak going!",
+
+  "stat_translations": "Translations",
+  "stat_words": "Words / Concepts",
+  "stat_quizzes": "Quizzes Passed",
+  "stat_facts": "Fun Facts",
+  "stat_vocab": "Saved Words",
+  "stat_badges": "Badges",
+  "no_badges_yet": "Keep learning to earn badges!",
+
+  "save_word_button": "💾 Save Word",
+  "save_word_prompt": "📖 <b>{word}</b> — {translation}\n\nWant to save this word to your vocabulary book?",
+  "word_saved": "✅ <b>{word}</b> saved to your vocabulary book! Use /vocab to review.",
+  "word_already_saved": "📖 <b>{word}</b> is already in your vocabulary book.",
+
+  "vocab_empty": "📖 Your vocabulary book is empty.\n\nStart learning words and save them with the 💾 button!",
+  "vocab_header": "📖 <b>Your Vocabulary Book</b> ({count} words)",
+  "vocab_tip": "\n💡 <i>Tip: Save words during learning sessions using the 💾 Save Word button.</i>",
+
+  "roleplay_doctor": "🏥 Doctor's Appointment",
+  "roleplay_airport": "✈️ At the Airport",
+  "roleplay_shopping": "🛍️ Shopping",
+  "persona_doctor": "You are a friendly doctor in a clinic in a country where they speak {lang}. The user is a patient describing their symptoms. Ask follow-up questions, show empathy, and suggest a simple diagnosis. Be patient if they make language mistakes.",
+  "persona_airport": "You are a helpful airline check-in agent at an airport in a country where they speak {lang}. The user is a passenger. Ask for their booking reference, check their luggage, and provide gate information. Be professional and friendly.",
+  "persona_shopping": "You are a friendly shop assistant in a clothing store in a country where they speak {lang}. The user is a customer looking for something to buy. Ask about their preferences, suggest items, and help them with sizes and prices."
 }

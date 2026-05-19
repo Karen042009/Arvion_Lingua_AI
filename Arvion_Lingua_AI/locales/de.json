@@ -78,5 +78,24 @@
   "roleplay_started": "🎭 Rollenspielmodus aktiviert! Ich werde nun wie im Szenario beschrieben agieren. Fangen wir an!",
   "persona_cafe": "Sie sind ein freundlicher Barista in einem Café in einem Land, in dem man {lang} spricht. Der Benutzer ist ein Kunde. Begrüßen Sie ihn und nehmen Sie seine Bestellung auf. Versuchen Sie, ihm ein Gebäck zu verkaufen. Seien Sie geduldig, wenn er Fehler macht.",
   "persona_hotel": "Sie sind ein hilfsbereiter Hotel-Rezeptionist in einem Land, in dem man {lang} spricht. Der Benutzer ist ein Gast, der einchecken möchte. Fragen Sie nach seinem Reservierungsnamen und bieten Sie Hilfe mit dem Gepäck oder Informationen über die Stadt an.",
-  "persona_job_interview": "Sie sind ein strenger, aber fairer Interviewer für eine {lang}-Entwicklerposition. Der Benutzer ist der Kandidat. Stellen Sie ihm eine Mischung aus technischen und verhaltensbezogenen Fragen, um seine Fähigkeiten zu beurteilen."
+  "persona_job_interview": "Sie sind ein strenger, aber fairer Interviewer für eine {lang}-Entwicklerposition. Der Benutzer ist der Kandidat. Stellen Sie ihm eine Mischung aus technischen und verhaltensbezogenen Fragen, um seine Fähigkeiten zu beurteilen.",
+
+  "onboarding_step2": "✅ Ausgezeichnete Wahl!\n\n<b>Schritt 2 / 4 — Wählen Sie Ihren Lernmodus:</b>",
+  "onboarding_step3_human": "✅ Verstanden!\n\n<b>Schritt 3 / 4 — Welche Sprache möchten Sie lernen?</b>",
+  "onboarding_step3_prog": "✅ Verstanden!\n\n<b>Schritt 3 / 4 — Welche Programmiersprache möchten Sie lernen?</b>",
+  "onboarding_step4": "✅ Fast fertig!\n\n<b>Schritt 4 / 4 — Was ist Ihr aktuelles Niveau?</b>",
+  "onboarding_done": "🎉 <b>Alles bereit!</b>\n\nIhr Arvion Lingua AI ist bereit. Das können Sie tun:\n\n🌐 <b>Übersetzen</b> — Text und Bilder\n🎓 <b>Lernen</b> — Wörter, Konzepte, Quiz\n🤖 <b>Chat</b> — Freier Chat oder Rollenspiele\n💾 <b>/vocab</b> — Ihre gespeicherten Wörter\n📊 <b>/stats</b> — Ihr Fortschritt\n💡 <b>/fact</b> — Interessante Fakten\n❓ <b>/help</b> — Alle Befehle\n\nFangen wir an zu lernen! 🚀",
+  "help_text": "<b>❓ Arvion Lingua AI — Befehle</b>\n\n/start — Neustart\n/menu — Hauptmenü\n/stats — Ihr Fortschritt\n/vocab — Ihr Vokabular\n/fact — Interessanter Fakt\n/models — KI-Modelle\n/help — Diese Hilfe",
+  "stat_translations": "Übersetzungen", "stat_words": "Wörter / Konzepte", "stat_quizzes": "Bestandene Quiz", "stat_facts": "Fakten", "stat_vocab": "Gespeicherte Wörter", "stat_badges": "Abzeichen", "no_badges_yet": "Lernen Sie weiter, um Abzeichen zu verdienen!",
+  "save_word_button": "💾 Wort speichern",
+  "save_word_prompt": "📖 <b>{word}</b> — {translation}\n\nMöchten Sie dieses Wort speichern?",
+  "word_saved": "✅ <b>{word}</b> in Ihrem Vokabular gespeichert. Nutzen Sie /vocab zum Wiederholen.",
+  "word_already_saved": "📖 <b>{word}</b> ist bereits in Ihrem Vokabular.",
+  "vocab_empty": "📖 Ihr Vokabular ist leer.\n\nLernen Sie Wörter und speichern Sie sie mit dem 💾 Button!",
+  "vocab_header": "📖 <b>Ihr Vokabular</b> ({count} Wörter)",
+  "vocab_tip": "\n💡 <i>Tipp: Speichern Sie Wörter beim Lernen mit dem 💾 Button.</i>",
+  "roleplay_doctor": "🏥 Arzttermin", "roleplay_airport": "✈️ Am Flughafen", "roleplay_shopping": "🛍️ Einkaufen",
+  "persona_doctor": "Sie sind ein freundlicher Arzt in einer Klinik in einem Land, in dem man {lang} spricht. Der Benutzer ist ein Patient, der seine Symptome beschreibt. Stellen Sie Folgefragen und schlagen Sie eine einfache Diagnose vor.",
+  "persona_airport": "Sie sind ein hilfreicher Check-in-Agent an einem Flughafen in einem Land, in dem man {lang} spricht. Der Benutzer ist ein Passagier. Fragen Sie nach dem Buchungscode und geben Sie Gate-Informationen.",
+  "persona_shopping": "Sie sind ein freundlicher Verkäufer in einem Bekleidungsgeschäft in einem Land, in dem man {lang} spricht. Der Benutzer ist ein Kunde. Fragen Sie nach Präferenzen und helfen Sie mit Größen und Preisen."
 }

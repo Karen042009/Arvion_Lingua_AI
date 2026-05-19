@@ -60,6 +60,9 @@ async def process_chat_menu_choice(
             i18n.get("roleplay_cafe"),
             i18n.get("roleplay_hotel"),
             i18n.get("roleplay_job_interview"),
+            i18n.get("roleplay_doctor"),
+            i18n.get("roleplay_airport"),
+            i18n.get("roleplay_shopping"),
         ]
         await message.answer(
             _("select_roleplay_scenario", i18n),
@@ -89,6 +92,9 @@ async def process_roleplay_scenario(
         "roleplay_cafe": "cafe",
         "roleplay_hotel": "hotel",
         "roleplay_job_interview": "job_interview",
+        "roleplay_doctor": "doctor",
+        "roleplay_airport": "airport",
+        "roleplay_shopping": "shopping",
     }
 
     scenario_key = None

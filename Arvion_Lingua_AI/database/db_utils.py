@@ -20,7 +20,8 @@ async def init_db():
                 quizzes_passed_count INTEGER DEFAULT 0,
                 facts_requested_count INTEGER DEFAULT 0,
                 streak_count INTEGER DEFAULT 0,
-                last_activity_date TEXT DEFAULT '1970-01-01'
+                last_activity_date TEXT DEFAULT '1970-01-01',
+                onboarding_complete INTEGER DEFAULT 0
             )
         ''')
         await db.execute('''
@@ -33,6 +34,22 @@ async def init_db():
                 FOREIGN KEY (user_id) REFERENCES users (user_id)
             )
         ''')
+        await db.execute('''
+            CREATE TABLE IF NOT EXISTS saved_words (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                word TEXT NOT NULL,
+                translation TEXT NOT NULL,
+                language TEXT NOT NULL,
+                saved_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users (user_id)
+            )
+        ''')
+        # Migrate existing users: add missing columns if they don't exist
+        try:
+            await db.execute("ALTER TABLE users ADD COLUMN onboarding_complete INTEGER DEFAULT 0")
+        except Exception:
+            pass  # Column already exists
         await db.commit()
     logging.info("Database initialized.")
 
@@ -142,3 +159,54 @@ async def clear_chat_history(user_id: int):
         await db.execute("DELETE FROM chat_history WHERE user_id = ?", (user_id,))
         await db.commit()
     logging.info(f"Chat history cleared for user {user_id}")
+
+async def save_word(user_id: int, word: str, translation: str, language: str):
+    async with aiosqlite.connect(DB_NAME) as db:
+        # Avoid duplicates
+        cursor = await db.execute(
+            "SELECT id FROM saved_words WHERE user_id = ? AND word = ? AND language = ?",
+            (user_id, word, language)
+        )
+        existing = await cursor.fetchone()
+        if not existing:
+            await db.execute(
+                "INSERT INTO saved_words (user_id, word, translation, language) VALUES (?, ?, ?, ?)",
+                (user_id, word, translation, language)
+            )
+            await db.commit()
+            return True
+        return False
+
+async def get_saved_words(user_id: int, limit: int = 50) -> list:
+    async with aiosqlite.connect(DB_NAME) as db:
+        db.row_factory = aiosqlite.Row
+        cursor = await db.execute(
+            "SELECT word, translation, language, saved_at FROM saved_words "
+            "WHERE user_id = ? ORDER BY saved_at DESC LIMIT ?",
+            (user_id, limit)
+        )
+        rows = await cursor.fetchall()
+        return [dict(row) for row in rows]
+
+async def delete_saved_word(user_id: int, word: str, language: str):
+    async with aiosqlite.connect(DB_NAME) as db:
+        await db.execute(
+            "DELETE FROM saved_words WHERE user_id = ? AND word = ? AND language = ?",
+            (user_id, word, language)
+        )
+        await db.commit()
+
+async def get_saved_words_count(user_id: int) -> int:
+    async with aiosqlite.connect(DB_NAME) as db:
+        cursor = await db.execute(
+            "SELECT COUNT(*) FROM saved_words WHERE user_id = ?", (user_id,)
+        )
+        row = await cursor.fetchone()
+        return row[0] if row else 0
+
+async def set_onboarding_complete(user_id: int):
+    async with aiosqlite.connect(DB_NAME) as db:
+        await db.execute(
+            "UPDATE users SET onboarding_complete = 1 WHERE user_id = ?", (user_id,)
+        )
+        await db.commit()

@@ -8,7 +8,7 @@ from bot.middlewares.localization import _, get_all_translations, Localization
 from bot.states.app_states import AppStates
 from bot.services.gemini_service import GeminiService
 from bot.keyboards.reply import get_dynamic_reply_keyboard
-from database.db_utils import get_or_create_user, increment_user_stat
+from database.db_utils import get_or_create_user, increment_user_stat, save_word
 from bot.utils.message_utils import send_safe_html
 from config import (
     SUPPORTED_LANGUAGES, LEARNING_LEVELS,
@@ -133,13 +133,15 @@ async def handle_learn_activity_request(message: Message, user_db: dict, state: 
     elif mode == 'human' and activity_type == 'word':
         await state.set_state(AppStates.awaiting_learning_answer)
         data_to_update["original_text"] = item_data.get("item")
+        data_to_update["word_translation"] = item_data.get("translation")
         data_to_update["source_lang"] = lang_info['learning']
         data_to_update["target_lang"] = lang_info['native']
         await state.update_data(**data_to_update)
+        buttons = [i18n.get("save_word_button", "💾 Save Word")]
         await message.answer(
             _('learn_word_prompt', i18n, level=level, text_to_translate=html.escape(item_data.get("item", ""))) +
             "\n\n" + _('learn_translate_this', i18n, target_lang_name=SUPPORTED_LANGUAGES[user_db['native_lang']]['display_name']),
-            reply_markup=get_dynamic_reply_keyboard([], i18n, 'back_to_learn_menu')
+            reply_markup=get_dynamic_reply_keyboard(buttons, i18n, 'back_to_learn_menu')
         )
 
     elif mode == 'programming' and activity_type == 'concept':
@@ -193,6 +195,21 @@ async def process_learning_answer(message: Message, state: FSMContext, user_db: 
     user_answer = message.text
     data = await state.get_data()
 
+    # Handle "Save Word" button
+    save_texts = get_all_translations("save_word_button", all_locales)
+    if user_answer in save_texts or user_answer == "💾 Save Word":
+        word = data.get("original_text", "")
+        translation = data.get("word_translation", "")
+        lang = data.get("source_lang", "")
+        if word and translation:
+            saved = await save_word(message.from_user.id, word, translation, lang)
+            if saved:
+                await message.answer(_("word_saved", i18n, word=html.escape(word)))
+            else:
+                await message.answer(_("word_already_saved", i18n, word=html.escape(word)))
+        await show_learning_menu(message, i18n, user_db, state)
+        return
+
     await increment_user_stat(message.from_user.id, 'words_learned_count')
     processing_msg = await message.answer(_('evaluating_answer', i18n))
 
@@ -207,7 +224,17 @@ async def process_learning_answer(message: Message, state: FSMContext, user_db: 
     if feedback:
         await send_safe_html(message, _('ai_feedback', i18n, feedback=feedback))
 
-    await show_learning_menu(message, i18n, user_db, state)
+    # After feedback, offer to save the word
+    word = data.get("original_text", "")
+    translation = data.get("word_translation", "")
+    if word and translation:
+        buttons = [i18n.get("save_word_button", "💾 Save Word")]
+        await message.answer(
+            _("save_word_prompt", i18n, word=html.escape(word), translation=html.escape(translation)),
+            reply_markup=get_dynamic_reply_keyboard(buttons, i18n, "back_to_learn_menu")
+        )
+    else:
+        await show_learning_menu(message, i18n, user_db, state)
 
 @learning_router.message(AppStates.awaiting_quiz_answer, F.text)
 async def process_quiz_answer(message: Message, state: FSMContext, user_db: dict, bot: Bot):
