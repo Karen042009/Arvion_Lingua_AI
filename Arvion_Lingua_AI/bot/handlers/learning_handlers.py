@@ -1,5 +1,6 @@
 import html
 import asyncio
+import logging
 from pathlib import Path
 from aiogram import Router, F, Bot
 from aiogram.fsm.context import FSMContext
@@ -49,9 +50,25 @@ async def cb_main_menu_learn(message: Message, user_db: dict, state: FSMContext)
     await show_learning_menu(message, i18n, user_db, state)
 
 def is_quiz_valid(data: dict | None) -> bool:
-    if not data: return False
+    if not data:
+        return False
     keys = ["question", "options", "correct_answer_text"]
-    return all(k in data for k in keys) and len(data["options"]) >= 2
+    if not all(k in data for k in keys):
+        return False
+    if len(data["options"]) < 2:
+        return False
+    # Verify correct_answer_text matches one of the options (case-insensitive)
+    correct = data["correct_answer_text"].strip().lower()
+    options_lower = [opt.strip().lower() for opt in data["options"]]
+    if correct not in options_lower:
+        # Try to auto-fix: find closest match
+        for i, opt in enumerate(options_lower):
+            if correct in opt or opt in correct:
+                data["correct_answer_text"] = data["options"][i]
+                return True
+        logging.warning(f"Quiz correct_answer_text not in options: '{data['correct_answer_text']}' not in {data['options']}")
+        return False
+    return True
 
 def is_word_valid(data: dict | None) -> bool:
     if not data: return False

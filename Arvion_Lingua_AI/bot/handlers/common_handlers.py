@@ -2,16 +2,27 @@ import html
 from aiogram import Router, F, Bot
 from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message
+from aiogram.types import Message, BotCommand
 from bot.middlewares.localization import _
 from bot.keyboards.reply import get_main_reply_keyboard
 from bot.states.app_states import AppStates
 from bot.services.gemini_service import GeminiService
-from database.db_utils import increment_user_stat, get_saved_words_count
+from database.db_utils import (
+    increment_user_stat, get_saved_words_count,
+    check_and_unlock_badges, update_username, get_or_create_user,
+    update_daily_challenge_progress
+)
 from config import SUPPORTED_LANGUAGES, SUPPORTED_PROGRAMMING_LANGUAGES
 
 common_router = Router()
 gemini_service = GeminiService()
+
+
+async def notify_badges(message: Message, i18n: dict, user_db: dict):
+    """Check and notify user about newly unlocked badges."""
+    new_badges = await check_and_unlock_badges(message.from_user.id, user_db)
+    for badge in new_badges:
+        await message.answer(f"🏅 <b>{_('badge_unlocked', i18n)}</b> {badge}")
 
 
 async def navigate_to_main_menu(message: Message, i18n: dict, state: FSMContext):

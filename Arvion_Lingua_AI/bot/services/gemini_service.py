@@ -161,7 +161,9 @@ class GeminiService:
         else:
             return None
 
-        response_str = await self._safe_generate(prompt, temperature=0.95)
+        # Quiz needs lower temperature for reliable JSON structure
+        temperature = 0.5 if item_type == 'quiz' else 0.95
+        response_str = await self._safe_generate(prompt, temperature=temperature)
         if not response_str:
             return None
         return self._parse_json_response(response_str)
@@ -178,10 +180,12 @@ class GeminiService:
             )
         if item_type == 'quiz':
             return (
-                f"Create a multiple-choice quiz about {learning} for a {native} "
-                f"speaker at {level} level.{recent_prompt}\nJSON response: "
-                f"{{\"question\": \"...\", \"options\": [...], "
-                f"\"correct_answer_text\": \"...\"}}"
+                f"Create a multiple-choice quiz question about {learning} for a {native} "
+                f"speaker at {level} level.{recent_prompt}\n"
+                f"IMPORTANT: The value of 'correct_answer_text' MUST be copied EXACTLY, "
+                f"character-for-character, from one of the strings in the 'options' array.\n"
+                f"JSON response: {{\"question\": \"...\", \"options\": [\"option A text\", \"option B text\", \"option C text\", \"option D text\"], "
+                f"\"correct_answer_text\": \"<copy exact text of correct option here>\"}}"
             )
         return None
 
@@ -207,10 +211,13 @@ class GeminiService:
             )
         if item_type == 'quiz':
             return (
-                f"Create a quiz about {prog_lang} for a developer at '{level}' "
+                f"Create a multiple-choice quiz question about {prog_lang} for a developer at '{level}' "
                 f"level. {academic_prompt}{recent_prompt} {lang_instruction}\n"
-                f"JSON response: {{\"question\": \"...\", \"options\": [...], "
-                f"\"correct_answer_text\": \"Exact text of correct option.\"}}"
+                f"IMPORTANT: The value of 'correct_answer_text' MUST be copied EXACTLY, "
+                f"character-for-character, from one of the strings in the 'options' array. "
+                f"Do NOT paraphrase or summarize it.\n"
+                f"JSON response: {{\"question\": \"...\", \"options\": [\"option A text\", \"option B text\", \"option C text\", \"option D text\"], "
+                f"\"correct_answer_text\": \"<copy exact text of correct option here>\"}}"
             )
         return None
 
@@ -321,3 +328,54 @@ class GeminiService:
                 continue
         
         return None
+
+    async def score_pronunciation(
+        self, target_word: str, transcribed_text: str, language: str
+    ) -> dict | None:
+        """Compare user's spoken word with target and return accuracy score."""
+        prompt = (
+            f'The user was asked to pronounce the word "{target_word}" in {language}. '
+            f'The speech recognition transcribed: "{transcribed_text}". '
+            f'Compare them phonetically and semantically. '
+            f'Give a score from 0 to 100 and brief feedback. '
+            f'JSON: {{"score": 85, "feedback": "...", "correct": true}}'
+        )
+        response_str = await self._safe_generate(prompt, temperature=0.3)
+        if not response_str:
+            return None
+        return self._parse_json_response(response_str)
+
+    async def get_word_of_the_day(
+        self, learning_lang: str, native_lang: str, level: str
+    ) -> dict | None:
+        """Generate a word of the day with example sentence."""
+        prompt = (
+            f'Generate a "Word of the Day" in {learning_lang} for a {level} learner. '
+            f'Provide translation in {native_lang}, an example sentence in {learning_lang}, '
+            f'and its translation. '
+            f'JSON: {{"word": "...", "translation": "...", "example": "...", "example_translation": "...", "part_of_speech": "..."}}'
+        )
+        response_str = await self._safe_generate(prompt, temperature=0.9)
+        if not response_str:
+            return None
+        return self._parse_json_response(response_str)
+
+    async def summarize_conversation(
+        self, history: list, interface_lang: str
+    ) -> str | None:
+        """Analyze a chat session and return a learning summary."""
+        if not history:
+            return None
+
+        flat = "\n".join(
+            f"{msg['role'].upper()}: {msg['parts'][0]['text']}"
+            for msg in history
+            if msg.get("parts")
+        )
+        prompt = (
+            f"Analyze this language learning conversation and provide a brief summary in {interface_lang}.\n"
+            f"Include: vocabulary used, grammar patterns, mistakes made, and suggestions.\n"
+            f"Keep it encouraging and concise (max 5 bullet points).\n\n"
+            f"Conversation:\n{flat[:3000]}"
+        )
+        return await self._safe_generate(prompt, use_json_config=False, temperature=0.5)

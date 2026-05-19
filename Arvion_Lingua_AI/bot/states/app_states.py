@@ -27,3 +27,10 @@ class AppStates(StatesGroup):
     in_chat = State()
     in_roleplay = State()
     awaiting_roleplay_scenario = State()
+
+    # Pronunciation states
+    awaiting_pronunciation = State()
+
+    # Flashcard review states
+    in_flashcard_review = State()
+    awaiting_flashcard_answer = State()
