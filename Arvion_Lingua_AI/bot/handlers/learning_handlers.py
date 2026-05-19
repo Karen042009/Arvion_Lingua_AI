@@ -34,7 +34,17 @@ async def show_learning_menu(message: Message, i18n: dict, user_db: dict, state:
         lang_name = SUPPORTED_LANGUAGES[user_db['learning_lang']]['display_name']
         level = LEARNING_LEVELS[user_db['learning_level']]
         text = _('learn_menu_text_human', i18n, learning_lang=lang_name, level=level)
-        buttons = [i18n.get('new_word'), i18n.get('quiz')]
+        buttons = [
+            i18n.get('new_word'),
+            i18n.get('quiz'),
+            i18n.get('fill_blank_button'),
+            i18n.get('story_mode_button'),
+            i18n.get('idiom_button'),
+            i18n.get('grammar_check_button'),
+            i18n.get('scramble_button'),
+            i18n.get('hangman_button'),
+            i18n.get('speed_round_button'),
+        ]
     else:
         lang_name = SUPPORTED_PROGRAMMING_LANGUAGES[user_db['programming_lang']]['display_name']
         level = PROGRAMMING_LEVELS[user_db['programming_level']]
@@ -199,6 +209,360 @@ async def process_learn_menu_choice(message: Message, user_db: dict, state: FSMC
 
     if activity_type:
         await handle_learn_activity_request(message, user_db, state, bot, activity_type)
+
+
+# ─── Fill in the Blank ───────────────────────────────────────────────────────
+
+@learning_router.message(
+    AppStates.in_learning_menu,
+    F.text.in_(get_all_translations("fill_blank_button", all_locales))
+)
+async def handle_fill_blank(message: Message, user_db: dict, state: FSMContext, bot: Bot):
+    i18n = getattr(bot, 'i18n', {})
+    if user_db.get('learning_mode') != 'human':
+        await message.answer(_('human_mode_only', i18n))
+        return
+
+    processing_msg = await message.answer(_('generating_exercise', i18n))
+    learning_lang = SUPPORTED_LANGUAGES[user_db['learning_lang']]['gemini_name']
+    native_lang = SUPPORTED_LANGUAGES[user_db['native_lang']]['gemini_name']
+    level = LEARNING_LEVELS[user_db['learning_level']]
+
+    result = await gemini_service.generate_fill_in_blank(learning_lang, native_lang, level)
+    await processing_msg.delete()
+
+    if not result or not result.get('sentence'):
+        await message.answer(_('generation_error', i18n))
+        await show_learning_menu(message, i18n, user_db, state)
+        return
+
+    sentence = html.escape(result['sentence'])
+    translation = html.escape(result.get('translation', ''))
+    options = [html.escape(opt) for opt in result.get('options', [])]
+    correct = html.escape(result.get('correct_answer_text', ''))
+    explanation = html.escape(result.get('explanation', ''))
+
+    await state.set_state(AppStates.awaiting_fill_blank_answer)
+    await state.update_data(
+        fill_correct=correct,
+        fill_explanation=explanation,
+        fill_options=options,
+    )
+
+    use_labels = any(len(opt) > 20 for opt in options)
+    question_text = (
+        f"✏️ <b>{_('fill_blank_title', i18n)}</b>\n\n"
+        f"<code>{sentence}</code>\n\n"
+        f"<i>{translation}</i>"
+    )
+
+    if use_labels:
+        labeled = "\n".join(f"<b>{chr(65+i)}:</b> {opt}" for i, opt in enumerate(options))
+        question_text += f"\n\n{labeled}"
+        reply_buttons = [chr(65+i) for i in range(len(options))]
+    else:
+        reply_buttons = options
+
+    await message.answer(
+        question_text,
+        reply_markup=get_dynamic_reply_keyboard(reply_buttons, i18n, 'back_to_learn_menu')
+    )
+
+
+@learning_router.message(AppStates.awaiting_fill_blank_answer, F.text)
+async def process_fill_blank_answer(message: Message, state: FSMContext, user_db: dict):
+    i18n = getattr(message.bot, 'i18n', {})
+    data = await state.get_data()
+    correct = data.get('fill_correct', '')
+    explanation = data.get('fill_explanation', '')
+    options = data.get('fill_options', [])
+
+    user_answer = message.text
+    # Handle label answers (A, B, C, D)
+    if user_answer in ['A', 'B', 'C', 'D'] and options:
+        idx = ord(user_answer) - ord('A')
+        if 0 <= idx < len(options):
+            user_answer = options[idx]
+
+    is_correct = user_answer.strip().lower() == correct.strip().lower()
+
+    if is_correct:
+        await increment_user_stat(message.from_user.id, 'quizzes_passed_count')
+        text = (
+            f"✅ <b>{_('correct', i18n)}</b>\n\n"
+            f"💬 {explanation}"
+        )
+    else:
+        text = (
+            f"❌ <b>{_('incorrect', i18n)}</b>\n"
+            f"✅ {_('correct_answer_was', i18n)}: <b>{correct}</b>\n\n"
+            f"💬 {explanation}"
+        )
+
+    await message.answer(
+        text,
+        reply_markup=get_dynamic_reply_keyboard(
+            [i18n.get('fill_blank_button', '✏️ Fill in the Blank')],
+            i18n, 'back_to_learn_menu'
+        )
+    )
+    await state.set_state(AppStates.in_learning_menu)
+
+
+# ─── Story Mode ──────────────────────────────────────────────────────────────
+
+STORY_TOPICS = ['travel', 'food', 'friendship', 'adventure', 'work', 'family', 'nature', 'technology']
+
+@learning_router.message(
+    AppStates.in_learning_menu,
+    F.text.in_(get_all_translations("story_mode_button", all_locales))
+)
+async def handle_story_mode(message: Message, user_db: dict, state: FSMContext, bot: Bot):
+    i18n = getattr(bot, 'i18n', {})
+    if user_db.get('learning_mode') != 'human':
+        await message.answer(_('human_mode_only', i18n))
+        return
+
+    processing_msg = await message.answer(_('generating_story', i18n))
+
+    import random
+    topic = random.choice(STORY_TOPICS)
+    learning_lang = SUPPORTED_LANGUAGES[user_db['learning_lang']]['gemini_name']
+    native_lang = SUPPORTED_LANGUAGES[user_db['native_lang']]['gemini_name']
+    level = LEARNING_LEVELS[user_db['learning_level']]
+
+    result = await gemini_service.generate_story(learning_lang, native_lang, level, topic)
+    await processing_msg.delete()
+
+    if not result or not result.get('story'):
+        await message.answer(_('generation_error', i18n))
+        await show_learning_menu(message, i18n, user_db, state)
+        return
+
+    title = html.escape(result.get('title', ''))
+    story = html.escape(result.get('story', ''))
+    translation = html.escape(result.get('story_translation', ''))
+    questions = result.get('questions', [])
+
+    await state.set_state(AppStates.in_story_mode)
+    await state.update_data(
+        story_questions=questions,
+        story_q_index=0,
+        story_correct=0,
+    )
+
+    text = (
+        f"📖 <b>{title}</b>\n\n"
+        f"{story}\n\n"
+        f"<i>— {translation}</i>"
+    )
+    await send_safe_html(
+        message, text,
+        reply_markup=get_dynamic_reply_keyboard(
+            [_('start_story_quiz', i18n)], i18n, 'back_to_learn_menu'
+        )
+    )
+
+
+@learning_router.message(AppStates.in_story_mode, F.text)
+async def handle_story_start_quiz(message: Message, state: FSMContext, bot: Bot, user_db: dict):
+    i18n = getattr(bot, 'i18n', {})
+    data = await state.get_data()
+    questions = data.get('story_questions', [])
+    q_index = data.get('story_q_index', 0)
+
+    start_texts = [i18n.get('start_story_quiz', '▶️ Start Quiz')]
+    if message.text not in start_texts:
+        return
+
+    if not questions or q_index >= len(questions):
+        await show_learning_menu(message, i18n, user_db, state)
+        return
+
+    await _show_story_question(message, i18n, state, questions, q_index)
+
+
+async def _show_story_question(message, i18n, state, questions, q_index):
+    q = questions[q_index]
+    question = html.escape(q.get('question', ''))
+    options = [html.escape(opt) for opt in q.get('options', [])]
+
+    use_labels = any(len(opt) > 25 for opt in options)
+    text = f"❓ <b>{q_index + 1}/{len(questions)}</b> {question}"
+
+    if use_labels:
+        labeled = "\n".join(f"<b>{chr(65+i)}:</b> {opt}" for i, opt in enumerate(options))
+        text += f"\n\n{labeled}"
+        reply_buttons = [chr(65+i) for i in range(len(options))]
+    else:
+        reply_buttons = options
+
+    await state.set_state(AppStates.awaiting_story_quiz_answer)
+    await state.update_data(
+        story_q_options=options,
+        story_use_labels=use_labels,
+        story_correct_answer=html.escape(q.get('correct_answer_text', '')),
+    )
+    await message.answer(
+        text,
+        reply_markup=get_dynamic_reply_keyboard(reply_buttons, i18n, 'back_to_learn_menu')
+    )
+
+
+@learning_router.message(AppStates.awaiting_story_quiz_answer, F.text)
+async def process_story_quiz_answer(message: Message, state: FSMContext, bot: Bot, user_db: dict):
+    i18n = getattr(bot, 'i18n', {})
+    data = await state.get_data()
+    questions = data.get('story_questions', [])
+    q_index = data.get('story_q_index', 0)
+    correct_count = data.get('story_correct', 0)
+    correct_answer = data.get('story_correct_answer', '')
+    options = data.get('story_q_options', [])
+    use_labels = data.get('story_use_labels', False)
+
+    user_answer = message.text
+    if use_labels and user_answer in ['A', 'B', 'C', 'D'] and options:
+        idx = ord(user_answer) - ord('A')
+        if 0 <= idx < len(options):
+            user_answer = options[idx]
+
+    is_correct = user_answer.strip().lower() == correct_answer.strip().lower()
+    if is_correct:
+        correct_count += 1
+        await message.answer(f"✅ {_('correct', i18n)}")
+    else:
+        await message.answer(f"❌ {_('incorrect', i18n)} — ✅ <b>{correct_answer}</b>")
+
+    next_index = q_index + 1
+    await state.update_data(story_q_index=next_index, story_correct=correct_count)
+
+    if next_index >= len(questions):
+        # Quiz done
+        await increment_user_stat(message.from_user.id, 'quizzes_passed_count')
+        score_text = (
+            f"🎉 <b>{_('story_quiz_done', i18n)}</b>\n"
+            f"📊 {correct_count}/{len(questions)} {_('correct_answers', i18n)}"
+        )
+        await message.answer(
+            score_text,
+            reply_markup=get_dynamic_reply_keyboard(
+                [i18n.get('story_mode_button', '📖 Story Mode')],
+                i18n, 'back_to_learn_menu'
+            )
+        )
+        await state.set_state(AppStates.in_learning_menu)
+    else:
+        await _show_story_question(message, i18n, state, questions, next_index)
+
+
+# ─── Idiom of the Day ────────────────────────────────────────────────────────
+
+@learning_router.message(
+    AppStates.in_learning_menu,
+    F.text.in_(get_all_translations("idiom_button", all_locales))
+)
+async def handle_idiom(message: Message, user_db: dict, state: FSMContext, bot: Bot):
+    i18n = getattr(bot, 'i18n', {})
+    if user_db.get('learning_mode') != 'human':
+        await message.answer(_('human_mode_only', i18n))
+        return
+
+    processing_msg = await message.answer(_('generating_idiom', i18n))
+    learning_lang = SUPPORTED_LANGUAGES[user_db['learning_lang']]['gemini_name']
+    native_lang = SUPPORTED_LANGUAGES[user_db['native_lang']]['gemini_name']
+
+    result = await gemini_service.generate_idiom(learning_lang, native_lang)
+    await processing_msg.delete()
+
+    if not result or not result.get('idiom'):
+        await message.answer(_('generation_error', i18n))
+        await show_learning_menu(message, i18n, user_db, state)
+        return
+
+    idiom = html.escape(result.get('idiom', ''))
+    literal = html.escape(result.get('literal_translation', ''))
+    meaning = html.escape(result.get('meaning', ''))
+    example = html.escape(result.get('example', ''))
+    example_tr = html.escape(result.get('example_translation', ''))
+
+    text = (
+        f"💬 <b>{_('idiom_title', i18n)}</b>\n\n"
+        f"🗣 <b>{idiom}</b>\n\n"
+        f"📝 <i>{_('literal', i18n)}:</i> {literal}\n"
+        f"💡 <i>{_('meaning', i18n)}:</i> {meaning}\n\n"
+        f"📌 <i>{_('example', i18n)}:</i>\n"
+        f"   <i>{example}</i>\n"
+        f"   {example_tr}"
+    )
+
+    await send_safe_html(
+        message, text,
+        reply_markup=get_dynamic_reply_keyboard(
+            [i18n.get('idiom_button', '💬 Idiom')], i18n, 'back_to_learn_menu'
+        )
+    )
+    await state.set_state(AppStates.in_learning_menu)
+
+
+# ─── Grammar Check ───────────────────────────────────────────────────────────
+
+@learning_router.message(
+    AppStates.in_learning_menu,
+    F.text.in_(get_all_translations("grammar_check_button", all_locales))
+)
+async def handle_grammar_check_entry(message: Message, user_db: dict, state: FSMContext, bot: Bot):
+    i18n = getattr(bot, 'i18n', {})
+    if user_db.get('learning_mode') != 'human':
+        await message.answer(_('human_mode_only', i18n))
+        return
+
+    await state.set_state(AppStates.in_grammar_check)
+    learning_lang = SUPPORTED_LANGUAGES[user_db['learning_lang']]['display_name']
+    await message.answer(
+        _('grammar_check_prompt', i18n, lang=learning_lang),
+        reply_markup=get_dynamic_reply_keyboard([], i18n, 'back_to_learn_menu')
+    )
+
+
+@learning_router.message(AppStates.in_grammar_check, F.text)
+async def process_grammar_check(message: Message, state: FSMContext, user_db: dict):
+    i18n = getattr(message.bot, 'i18n', {})
+    processing_msg = await message.answer(_('checking_grammar', i18n))
+
+    learning_lang = SUPPORTED_LANGUAGES[user_db['learning_lang']]['gemini_name']
+    native_lang = SUPPORTED_LANGUAGES[user_db['native_lang']]['gemini_name']
+
+    result = await gemini_service.check_grammar(message.text, learning_lang, native_lang)
+    await processing_msg.delete()
+
+    if not result:
+        await message.answer(_('generation_error', i18n))
+        await show_learning_menu(message, i18n, user_db, state)
+        return
+
+    has_errors = result.get('has_errors', False)
+    corrected = html.escape(result.get('corrected_text', ''))
+    errors = result.get('errors', [])
+    feedback = html.escape(result.get('overall_feedback', ''))
+
+    if not has_errors:
+        text = f"✅ <b>{_('grammar_perfect', i18n)}</b>\n\n💬 {feedback}"
+    else:
+        text = f"📝 <b>{_('grammar_result', i18n)}</b>\n\n"
+        text += f"✅ <b>{_('corrected', i18n)}:</b> <i>{corrected}</i>\n\n"
+        if errors:
+            text += f"🔍 <b>{_('errors_found', i18n)}:</b>\n"
+            for err in errors[:5]:
+                orig = html.escape(err.get('original', ''))
+                fix = html.escape(err.get('correction', ''))
+                expl = html.escape(err.get('explanation', ''))
+                text += f"  • <s>{orig}</s> → <b>{fix}</b>\n    <i>{expl}</i>\n"
+        text += f"\n💬 {feedback}"
+
+    await send_safe_html(
+        message, text,
+        reply_markup=get_dynamic_reply_keyboard([], i18n, 'back_to_learn_menu')
+    )
 
 
 @learning_router.message(F.text.in_(get_all_translations("back_to_learn_menu", all_locales)))

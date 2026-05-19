@@ -379,3 +379,202 @@ class GeminiService:
             f"Conversation:\n{flat[:3000]}"
         )
         return await self._safe_generate(prompt, use_json_config=False, temperature=0.5)
+
+    async def generate_story(
+        self, learning_lang: str, native_lang: str, level: str, topic: str
+    ) -> dict | None:
+        """Generate a short story with comprehension questions."""
+        prompt = (
+            f"Write a short story in {learning_lang} for a {level} learner about the topic: '{topic}'.\n"
+            f"The story should be 5-8 sentences long, appropriate for the level.\n"
+            f"Then create 3 multiple-choice comprehension questions about the story.\n"
+            f"Provide translations of the story in {native_lang}.\n"
+            f"JSON response: {{\n"
+            f'  "title": "...",\n'
+            f'  "story": "...",\n'
+            f'  "story_translation": "...",\n'
+            f'  "questions": [\n'
+            f'    {{"question": "...", "options": ["A", "B", "C", "D"], "correct_answer_text": "exact copy of correct option"}},\n'
+            f'    {{"question": "...", "options": ["A", "B", "C", "D"], "correct_answer_text": "exact copy of correct option"}},\n'
+            f'    {{"question": "...", "options": ["A", "B", "C", "D"], "correct_answer_text": "exact copy of correct option"}}\n'
+            f'  ]\n'
+            f"}}"
+        )
+        response_str = await self._safe_generate(prompt, temperature=0.7)
+        if not response_str:
+            return None
+        return self._parse_json_response(response_str)
+
+    async def check_grammar(
+        self, user_text: str, target_lang: str, native_lang: str
+    ) -> dict | None:
+        """Check grammar and return corrections with explanations."""
+        prompt = (
+            f'The user wrote this text in {target_lang}: "{user_text}"\n'
+            f"Check for grammar, spelling, and style errors.\n"
+            f"Provide corrections and explanations in {native_lang}.\n"
+            f"If the text is perfect, say so.\n"
+            f"JSON response: {{\n"
+            f'  "has_errors": true,\n'
+            f'  "corrected_text": "...",\n'
+            f'  "errors": [{{"original": "...", "correction": "...", "explanation": "..."}}],\n'
+            f'  "overall_feedback": "..."\n'
+            f"}}"
+        )
+        response_str = await self._safe_generate(prompt, temperature=0.3)
+        if not response_str:
+            return None
+        return self._parse_json_response(response_str)
+
+    async def generate_fill_in_blank(
+        self, learning_lang: str, native_lang: str, level: str
+    ) -> dict | None:
+        """Generate a fill-in-the-blank exercise."""
+        prompt = (
+            f"Create a fill-in-the-blank exercise in {learning_lang} for a {level} learner.\n"
+            f"Write a sentence with one word replaced by '___'.\n"
+            f"Provide 4 options (one correct, three plausible distractors).\n"
+            f"Provide the full sentence translation in {native_lang}.\n"
+            f"IMPORTANT: correct_answer_text must be copied EXACTLY from the options array.\n"
+            f"JSON response: {{\n"
+            f'  "sentence": "The sentence with ___ blank",\n'
+            f'  "translation": "Full sentence translation in {native_lang}",\n'
+            f'  "options": ["option1", "option2", "option3", "option4"],\n'
+            f'  "correct_answer_text": "exact copy from options array",\n'
+            f'  "explanation": "Why this word is correct"\n'
+            f"}}"
+        )
+        response_str = await self._safe_generate(prompt, temperature=0.6)
+        if not response_str:
+            return None
+        return self._parse_json_response(response_str)
+
+    async def generate_idiom(
+        self, learning_lang: str, native_lang: str
+    ) -> dict | None:
+        """Generate an idiom with meaning and example."""
+        prompt = (
+            f"Generate one interesting idiom or common expression in {learning_lang}.\n"
+            f"Provide its literal translation, actual meaning, and an example sentence.\n"
+            f"Translate everything to {native_lang}.\n"
+            f"JSON response: {{\n"
+            f'  "idiom": "...",\n'
+            f'  "literal_translation": "...",\n'
+            f'  "meaning": "...",\n'
+            f'  "example": "...",\n'
+            f'  "example_translation": "..."\n'
+            f"}}"
+        )
+        response_str = await self._safe_generate(prompt, temperature=0.9)
+        if not response_str:
+            return None
+        return self._parse_json_response(response_str)
+
+    async def suggest_level_adjustment(
+        self, correct_count: int, total_count: int, current_level: str, lang: str
+    ) -> dict | None:
+        """Suggest level up or down based on quiz performance."""
+        accuracy = (correct_count / total_count * 100) if total_count > 0 else 0
+        prompt = (
+            f"A language learner studying {lang} at '{current_level}' level "
+            f"answered {correct_count}/{total_count} quiz questions correctly ({accuracy:.0f}% accuracy).\n"
+            f"Should they level up, stay, or level down? Be encouraging.\n"
+            f"JSON response: {{\n"
+            f'  "suggestion": "up" | "stay" | "down",\n'
+            f'  "message": "encouraging message in English",\n'
+            f'  "reason": "brief reason"\n'
+            f"}}"
+        )
+        response_str = await self._safe_generate(prompt, temperature=0.4)
+        if not response_str:
+            return None
+        return self._parse_json_response(response_str)
+
+    async def get_word_for_scramble(
+        self, learning_lang: str, native_lang: str, level: str
+    ) -> dict | None:
+        """Get a word suitable for scramble game."""
+        prompt = (
+            f"Generate one word in {learning_lang} for a {level} learner. "
+            f"The word should be 4-8 letters long, common, and easy to understand. "
+            f"Provide its translation in {native_lang} and a hint sentence. "
+            f"JSON: {{\"word\": \"hello\", \"translation\": \"...\", \"hint\": \"A greeting word\"}}"
+        )
+        response_str = await self._safe_generate(prompt, temperature=0.8)
+        if not response_str:
+            return None
+        return self._parse_json_response(response_str)
+
+    async def get_word_for_hangman(
+        self, learning_lang: str, native_lang: str, level: str
+    ) -> dict | None:
+        """Get a word for hangman game."""
+        prompt = (
+            f"Generate one word in {learning_lang} for a {level} learner. "
+            f"The word should be 4-8 letters, only alphabetic characters, no spaces or hyphens. "
+            f"Provide its translation in {native_lang} and a category hint. "
+            f"JSON: {{\"word\": \"apple\", \"translation\": \"...\", \"category\": \"Food\"}}"
+        )
+        response_str = await self._safe_generate(prompt, temperature=0.8)
+        if not response_str:
+            return None
+        return self._parse_json_response(response_str)
+
+    async def get_speed_round_words(
+        self, learning_lang: str, native_lang: str, level: str, count: int = 8
+    ) -> list | None:
+        """Get a batch of words for speed round."""
+        prompt = (
+            f"Generate {count} different words in {learning_lang} for a {level} learner. "
+            f"Each word should be common and easy to translate. "
+            f"Provide translation in {native_lang} for each. "
+            f"JSON: {{\"words\": ["
+            f"{{\"word\": \"...\", \"translation\": \"...\"}},"
+            f"{{\"word\": \"...\", \"translation\": \"...\"}}"
+            f"]}}"
+        )
+        response_str = await self._safe_generate(prompt, temperature=0.9)
+        if not response_str:
+            return None
+        data = self._parse_json_response(response_str)
+        return data.get("words") if data else None
+
+    async def get_grammar_lesson(
+        self, topic: str, learning_lang: str, native_lang: str, level: str
+    ) -> dict | None:
+        """Generate a grammar lesson with examples and mini-quiz."""
+        prompt = (
+            f"Create a grammar lesson about '{topic}' in {learning_lang} for a {level} learner. "
+            f"Explain the rule clearly in {native_lang}, give 3 examples, and create 2 practice sentences. "
+            f"JSON: {{\n"
+            f'  "topic": "...",\n'
+            f'  "rule": "Clear explanation in {native_lang}",\n'
+            f'  "examples": ["example1", "example2", "example3"],\n'
+            f'  "examples_translation": ["trans1", "trans2", "trans3"],\n'
+            f'  "practice": [{{"sentence": "...", "translation": "..."}}]\n'
+            f"}}"
+        )
+        response_str = await self._safe_generate(prompt, temperature=0.5)
+        if not response_str:
+            return None
+        return self._parse_json_response(response_str)
+
+    async def get_culture_info(
+        self, learning_lang: str, interface_lang: str, topic: str
+    ) -> dict | None:
+        """Get cultural information about a language's country."""
+        prompt = (
+            f"Share interesting cultural information about the country/culture where {learning_lang} is spoken. "
+            f"Topic: {topic}. Write in {interface_lang}. "
+            f"Be informative, engaging, and include a surprising fact. "
+            f"JSON: {{\n"
+            f'  "title": "...",\n'
+            f'  "content": "2-3 paragraphs of cultural info",\n'
+            f'  "fun_fact": "One surprising fact",\n'
+            f'  "tip": "Practical tip for language learners"\n'
+            f"}}"
+        )
+        response_str = await self._safe_generate(prompt, temperature=0.8)
+        if not response_str:
+            return None
+        return self._parse_json_response(response_str)

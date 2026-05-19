@@ -34,3 +34,27 @@ class AppStates(StatesGroup):
     # Flashcard review states
     in_flashcard_review = State()
     awaiting_flashcard_answer = State()
+
+    # Story mode states
+    in_story_mode = State()
+    awaiting_story_quiz_answer = State()
+
+    # Grammar check state
+    in_grammar_check = State()
+
+    # Fill in the blank state
+    awaiting_fill_blank_answer = State()
+
+    # Game states
+    in_word_scramble = State()
+    awaiting_scramble_answer = State()
+    in_hangman = State()
+    awaiting_hangman_letter = State()
+    in_speed_round = State()
+    awaiting_speed_answer = State()
+
+    # Grammar Guide state
+    in_grammar_guide = State()
+
+    # Culture Corner state
+    in_culture_corner = State()

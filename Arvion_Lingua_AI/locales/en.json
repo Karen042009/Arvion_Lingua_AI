@@ -88,7 +88,7 @@
   "onboarding_step4": "✅ Almost done!\n\n<b>Step 4 / 4 — What is your current level?</b>",
   "onboarding_done": "🎉 <b>You're all set!</b>\n\nYour Arvion Lingua AI is ready. Here's what you can do:\n\n🌐 <b>Translate</b> — text and images\n🎓 <b>Learn</b> — words, concepts, quizzes\n🤖 <b>Chat</b> — free chat or roleplay scenarios\n💾 <b>/vocab</b> — your saved words\n📊 <b>/stats</b> — your progress\n💡 <b>/fact</b> — fun facts\n❓ <b>/help</b> — all commands\n\nLet's start learning! 🚀",
 
-  "help_text": "<b>❓ Arvion Lingua AI — Commands</b>\n\n<b>Main Features:</b>\n🌐 <b>Translate</b> — Translate text or images between 13 languages\n🎓 <b>Learn</b> — Words, concepts, and quizzes\n🤖 <b>Chat</b> — Free chat or roleplay scenarios\n\n<b>Commands:</b>\n/start — Restart the bot\n/menu — Go to main menu\n/stats — View your progress &amp; badges\n/vocab — Your saved vocabulary book\n/fact — Get a fun fact about your language\n/models — View active AI models\n/help — Show this message\n\n<b>Tips:</b>\n• 🎤 Send a voice message in Chat mode\n• 📷 Send a photo in Translate mode\n• 💾 Save words to your vocabulary book\n• 🔥 Keep your daily streak going!",
+  "help_text": "<b>❓ Arvion Lingua AI — Commands</b>\n\n<b>Main Features:</b>\n🌐 <b>Translate</b> — Translate text or images between 13 languages\n🎓 <b>Learn</b> — Words, fill-in-blank, story mode, idioms, grammar check\n🤖 <b>Chat</b> — Free chat or 6 roleplay scenarios\n\n<b>Commands:</b>\n/start — Restart the bot\n/menu — Go to main menu\n/stats — Progress, badges &amp; streaks\n/vocab — Your saved vocabulary book\n/review — Flashcard review (spaced repetition)\n/wotd — Word of the Day\n/challenge — Today's daily challenge\n/leaderboard — Global top 10\n/summary — AI summary of your chat session\n/fact — Fun fact about your language\n/models — Active AI models\n/help — Show this message\n\n<b>Tips:</b>\n• 🎤 Voice messages in Chat mode\n• 📷 Photos in Translate mode\n• 💾 Save words to vocabulary\n• ✏️ Fill in the Blank exercises\n• 📖 Story Mode with comprehension quiz\n• 💬 Idiom of the Day\n• 🔤 Grammar Check your writing\n• 🔥 Keep your daily streak!",
 
   "stat_translations": "Translations",
   "stat_words": "Words / Concepts",
@@ -112,5 +112,129 @@
   "roleplay_shopping": "🛍️ Shopping",
   "persona_doctor": "You are a friendly doctor in a clinic in a country where they speak {lang}. The user is a patient describing their symptoms. Ask follow-up questions, show empathy, and suggest a simple diagnosis. Be patient if they make language mistakes.",
   "persona_airport": "You are a helpful airline check-in agent at an airport in a country where they speak {lang}. The user is a passenger. Ask for their booking reference, check their luggage, and provide gate information. Be professional and friendly.",
-  "persona_shopping": "You are a friendly shop assistant in a clothing store in a country where they speak {lang}. The user is a customer looking for something to buy. Ask about their preferences, suggest items, and help them with sizes and prices."
+  "persona_shopping": "You are a friendly shop assistant in a clothing store in a country where they speak {lang}. The user is a customer looking for something to buy. Ask about their preferences, suggest items, and help them with sizes and prices.",
+
+  "fill_blank_button": "✏️ Fill in the Blank",
+  "fill_blank_title": "Fill in the Blank",
+  "story_mode_button": "📖 Story Mode",
+  "idiom_button": "💬 Idiom",
+  "grammar_check_button": "🔤 Grammar Check",
+
+  "generating_story": "⏳ Generating a story...",
+  "generating_idiom": "⏳ Generating an idiom...",
+  "checking_grammar": "🔤 Checking your grammar...",
+
+  "start_story_quiz": "▶️ Start Quiz",
+  "story_quiz_done": "Story Quiz Complete!",
+  "correct_answers": "correct answers",
+
+  "fill_blank_title": "Fill in the Blank",
+  "correct": "Correct",
+  "incorrect": "Incorrect",
+  "correct_answer_was": "Correct answer was",
+
+  "idiom_title": "Idiom of the Day",
+  "literal": "Literal meaning",
+  "meaning": "Actual meaning",
+  "example": "Example",
+
+  "grammar_check_prompt": "Send me a sentence or text in <b>{lang}</b> and I'll check your grammar:",
+  "grammar_perfect": "Perfect! No errors found.",
+  "grammar_result": "Grammar Check Result",
+  "corrected": "Corrected text",
+  "errors_found": "Errors found",
+
+  "human_mode_only": "⚠️ This feature is available in Human Languages mode only.",
+
+  "badge_unlocked": "🏅 New badge unlocked:",
+
+  "leaderboard_title": "Global Leaderboard",
+  "leaderboard_empty": "No data yet. Be the first to take a quiz!",
+
+  "daily_challenge_title": "Daily Challenge",
+  "challenge_type_quiz": "Take quizzes",
+  "challenge_type_word": "Learn new words",
+  "challenge_type_translate": "Translate texts",
+  "challenge_goal": "Goal: complete {target} activities today",
+  "challenge_completed": "Challenge completed! Great job!",
+  "challenge_tip": "Use the Learn or Translate sections to complete your challenge.",
+
+  "wotd_title": "Word of the Day",
+  "wotd_human_only": "⚠️ Word of the Day is available in Human Languages mode only.",
+
+  "generating_summary": "Analyzing your conversation...",
+  "summary_title": "Conversation Summary",
+  "summary_no_history": "No conversation history found. Start chatting first!",
+
+  "pronunciation_prompt": "🎤 Say the word <b>{word}</b> out loud and send a voice message:",
+  "analyzing_pronunciation": "Analyzing your pronunciation...",
+  "pronunciation_result": "Pronunciation Score",
+  "target_word": "Target word",
+  "you_said": "You said",
+  "accuracy": "Accuracy",
+  "try_again": "🔄 Try Again",
+
+  "review_intro": "📖 You have <b>{total}</b> saved words, <b>{due}</b> due for review today.",
+  "start_review": "▶️ Start Review",
+  "review_all_done": "🎉 All caught up! No words due for review today.",
+  "flashcard_title": "Flashcard Review",
+  "flashcard_translate_prompt": "What is the translation of this word?",
+  "review_interval": "Next review in {days} day(s)",
+  "review_count_label": "Reviewed {count} time(s)",
+  "show_answer": "👁 Show Answer",
+  "rate_difficulty": "How difficult was it?",
+  "rating_hard": "Hard",
+  "rating_ok": "OK",
+  "rating_easy": "Easy",
+
+  "scramble_button": "🔀 Word Scramble",
+  "hangman_button": "🎯 Hangman",
+  "speed_round_button": "⚡ Speed Round",
+
+  "generating_scramble": "⏳ Preparing a word...",
+  "generating_hangman": "⏳ Choosing a word...",
+  "generating_speed_round": "⏳ Preparing speed round...",
+
+  "scramble_title": "Word Scramble",
+  "scramble_hint": "Hint",
+  "translation": "Translation",
+  "scramble_prompt": "Unscramble the letters and type the correct word:",
+  "scramble_give_up": "🏳 Give Up",
+  "scramble_gave_up": "The word was: <b>{word}</b>. Better luck next time!",
+  "scramble_correct": "Correct!",
+  "scramble_wrong": "Not quite! Try again. (Attempt {attempts})",
+  "attempts": "Solved in {count} attempt(s)",
+
+  "hangman_title": "Hangman",
+  "category": "Category",
+  "hangman_prompt": "Guess a letter! ({wrong}/{max} wrong guesses)",
+  "hangman_give_up": "🏳 Give Up",
+  "hangman_gave_up": "The word was: <b>{word}</b>. Better luck next time!",
+  "hangman_one_letter": "Please send one letter at a time.",
+  "hangman_already_guessed": "You already guessed <b>{letter}</b>! Try another.",
+  "hangman_good_guess": "Good guess!",
+  "hangman_wrong_guess": "Wrong guess!",
+  "hangman_guessed_letters": "Guessed letters",
+  "hangman_won": "You won!",
+  "hangman_lost": "Game over!",
+  "the_word_was": "The word was",
+
+  "speed_round_title": "Speed Round",
+  "speed_round_intro": "⚡ <b>Speed Round!</b>\n\nTranslate <b>{count}</b> words as fast as you can!\nYou have <b>{seconds} seconds</b>.\n\nReady?",
+  "speed_start": "▶️ Start!",
+  "speed_translate_prompt": "Translate this word to your native language:",
+  "speed_skip": "⏭ Skip",
+  "speed_round_done": "Speed Round Complete!",
+  "speed_time_up": "Time's up!",
+
+  "grammar_guide_intro": "📚 <b>Grammar Guide — {lang}</b>\n\nChoose a topic to learn:",
+  "grammar_rule": "Rule",
+  "grammar_examples": "Examples",
+  "grammar_practice": "Practice",
+  "generating_lesson": "⏳ Generating grammar lesson...",
+
+  "culture_intro": "🌍 <b>Culture Corner — {lang}</b>\n\nChoose a topic to explore:",
+  "generating_culture": "⏳ Loading cultural info...",
+  "fun_fact_label": "Fun Fact",
+  "learner_tip": "Learner's Tip"
 }

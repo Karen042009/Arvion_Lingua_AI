@@ -6,6 +6,8 @@ DEFAULT_TEXTS = {
     'learn_button': '🎓 Learn',
     'chat_button': '🤖 Chat with AI',
     'settings_button': '⚙️ Settings',
+    'games_button': '🎮 Games',
+    'culture_button': '🌍 Culture & Grammar',
     'back_to_translator': '⬅️ Back to Translator'
 }
 
@@ -21,7 +23,11 @@ def get_main_reply_keyboard(i18n: dict) -> ReplyKeyboardMarkup:
         [
             KeyboardButton(text=get_text(i18n, 'chat_button')),
             KeyboardButton(text=get_text(i18n, 'settings_button'))
-        ]
+        ],
+        [
+            KeyboardButton(text=get_text(i18n, 'games_button')),
+            KeyboardButton(text=get_text(i18n, 'culture_button'))
+        ],
     ]
     return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
 

@@ -19,6 +19,11 @@ from bot.handlers import (
 )
 from bot.handlers.onboarding_handlers import onboarding_router
 from bot.handlers.vocab_handlers import vocab_router
+from bot.handlers.flashcard_handlers import flashcard_router
+from bot.handlers.extra_handlers import extra_router
+from bot.handlers.pronunciation_handlers import pronunciation_router
+from bot.handlers.games_handlers import games_router
+from bot.handlers.culture_grammar_handlers import culture_grammar_router
 
 async def main():
     logging.basicConfig(
@@ -55,6 +60,11 @@ async def main():
     dp.include_router(learning_handlers.learning_router)
     dp.include_router(chat_handlers.chat_router)
     dp.include_router(vocab_router)
+    dp.include_router(flashcard_router)
+    dp.include_router(extra_router)
+    dp.include_router(pronunciation_router)
+    dp.include_router(games_router)
+    dp.include_router(culture_grammar_router)
 
     # ------------------ Reply Keyboard Handlers ------------------
     all_translate_texts = get_all_translations("translate_button", loc_middleware.locales)
@@ -81,6 +91,27 @@ async def main():
     try:
         # Սա լավ պրակտիկա է՝ համոզվելու համար, որ հին webhook-ները չեն խանգարում
         await bot.delete_webhook(drop_pending_updates=True)
+
+        # Set bot command menu visible in Telegram
+        from aiogram.types import BotCommand
+        await bot.set_my_commands([
+            BotCommand(command="start",       description="🔄 Restart / Main menu"),
+            BotCommand(command="menu",        description="🏠 Go to main menu"),
+            BotCommand(command="stats",       description="📊 Your progress & badges"),
+            BotCommand(command="vocab",       description="📖 Your vocabulary book"),
+            BotCommand(command="review",      description="🃏 Flashcard review (spaced repetition)"),
+            BotCommand(command="wotd",        description="📖 Word of the Day"),
+            BotCommand(command="challenge",   description="🎯 Daily challenge"),
+            BotCommand(command="leaderboard", description="🏆 Global leaderboard"),
+            BotCommand(command="grammar",     description="📚 Grammar Guide"),
+            BotCommand(command="culture",     description="🌍 Culture Corner"),
+            BotCommand(command="summary",     description="📊 Chat session summary"),
+            BotCommand(command="fact",        description="💡 Fun fact about your language"),
+            BotCommand(command="models",      description="🤖 Active AI models"),
+            BotCommand(command="help",        description="❓ All commands"),
+        ])
+        logging.info("Bot commands set successfully.")
+
         # Սկսում ենք Polling ռեժիմը
         await dp.start_polling(bot)
     except Exception as e:
