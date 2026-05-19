@@ -86,6 +86,19 @@ async def main():
     @dp.message(F.text.in_(all_settings_texts))
     async def handle_settings_text(message, user_db, state):
         await settings_handlers.cb_main_menu_settings(message, user_db, state)
+
+    all_games_texts = get_all_translations("games_button", loc_middleware.locales)
+    @dp.message(F.text.in_(all_games_texts))
+    async def handle_games_text(message, user_db, state):
+        i18n = getattr(message.bot, "i18n", {})
+        from bot.handlers.games_handlers import show_games_menu
+        await show_games_menu(message, i18n, state)
+
+    all_culture_texts = get_all_translations("culture_button", loc_middleware.locales)
+    @dp.message(F.text.in_(all_culture_texts))
+    async def handle_culture_text(message, user_db, state):
+        from bot.handlers.culture_grammar_handlers import cmd_culture
+        await cmd_culture(message, user_db, state)
     # -----------------------------------------------------------
 
     try:

@@ -59,10 +59,36 @@ def build_hangman_display(word: str, guessed: set) -> str:
     )
 
 
+# ─── Games Menu ───────────────────────────────────────────────────────────────
+
+async def show_games_menu(message: Message, i18n: dict, state: FSMContext):
+    """Show the dedicated Games menu."""
+    await state.set_state(AppStates.in_games_menu)
+    buttons = [
+        i18n.get("scramble_button", "🔀 Word Scramble"),
+        i18n.get("hangman_button", "🎯 Hangman"),
+        i18n.get("speed_round_button", "⚡ Speed Round"),
+    ]
+    text = i18n.get(
+        "games_menu_text",
+        "🎮 <b>Games</b>\n\nChoose a game to play and practice your vocabulary!"
+    )
+    await message.answer(
+        text,
+        reply_markup=get_dynamic_reply_keyboard(buttons, i18n, "back_to_main_menu")
+    )
+
+
+@games_router.message(F.text.in_(get_all_translations("back_to_games_menu", all_locales)))
+async def handle_back_to_games_menu(message: Message, state: FSMContext):
+    i18n = getattr(message.bot, "i18n", {})
+    await show_games_menu(message, i18n, state)
+
+
 # ─── Word Scramble ────────────────────────────────────────────────────────────
 
 @games_router.message(
-    AppStates.in_learning_menu,
+    AppStates.in_games_menu,
     F.text.in_(get_all_translations("scramble_button", all_locales))
 )
 async def handle_scramble_start(message: Message, user_db: dict, state: FSMContext, bot: Bot):
@@ -84,16 +110,14 @@ async def _start_scramble_round(message, user_db, state, i18n):
 
     if not result or not result.get("word"):
         await message.answer(_("generation_error", i18n))
-        user_db_fresh = await get_or_create_user(message.from_user.id)
-        from bot.handlers.learning_handlers import show_learning_menu
-        await show_learning_menu(message, i18n, user_db_fresh, state)
+        await show_games_menu(message, i18n, state)
         return
 
     word = result["word"].upper().strip()
-    # Keep only alpha chars for scramble
     word = "".join(c for c in word if c.isalpha())
     if len(word) < 3:
         await message.answer(_("generation_error", i18n))
+        await show_games_menu(message, i18n, state)
         return
 
     scrambled = scramble_word(word)
@@ -116,7 +140,7 @@ async def _start_scramble_round(message, user_db, state, i18n):
     await message.answer(
         text,
         reply_markup=get_dynamic_reply_keyboard(
-            [_("scramble_give_up", i18n)], i18n, "back_to_learn_menu"
+            [_("scramble_give_up", i18n)], i18n, "back_to_games_menu"
         )
     )
 
@@ -133,10 +157,10 @@ async def process_scramble_answer(message: Message, state: FSMContext, user_db: 
         await message.answer(
             _("scramble_gave_up", i18n, word=word),
             reply_markup=get_dynamic_reply_keyboard(
-                [_("scramble_button", i18n)], i18n, "back_to_learn_menu"
+                [_("scramble_button", i18n)], i18n, "back_to_games_menu"
             )
         )
-        await state.set_state(AppStates.in_learning_menu)
+        await state.set_state(AppStates.in_games_menu)
         return
 
     user_answer = message.text.upper().strip()
@@ -154,15 +178,15 @@ async def process_scramble_answer(message: Message, state: FSMContext, user_db: 
         await message.answer(
             text,
             reply_markup=get_dynamic_reply_keyboard(
-                [_("scramble_button", i18n)], i18n, "back_to_learn_menu"
+                [_("scramble_button", i18n)], i18n, "back_to_games_menu"
             )
         )
-        await state.set_state(AppStates.in_learning_menu)
+        await state.set_state(AppStates.in_games_menu)
     else:
         await message.answer(
             _("scramble_wrong", i18n, attempts=attempts),
             reply_markup=get_dynamic_reply_keyboard(
-                [_("scramble_give_up", i18n)], i18n, "back_to_learn_menu"
+                [_("scramble_give_up", i18n)], i18n, "back_to_games_menu"
             )
         )
 
@@ -170,7 +194,7 @@ async def process_scramble_answer(message: Message, state: FSMContext, user_db: 
 # ─── Hangman ──────────────────────────────────────────────────────────────────
 
 @games_router.message(
-    AppStates.in_learning_menu,
+    AppStates.in_games_menu,
     F.text.in_(get_all_translations("hangman_button", all_locales))
 )
 async def handle_hangman_start(message: Message, user_db: dict, state: FSMContext, bot: Bot):
@@ -192,11 +216,13 @@ async def _start_hangman_round(message, user_db, state, i18n):
 
     if not result or not result.get("word"):
         await message.answer(_("generation_error", i18n))
+        await show_games_menu(message, i18n, state)
         return
 
     word = "".join(c for c in result["word"].upper() if c.isalpha())
     if len(word) < 3:
         await message.answer(_("generation_error", i18n))
+        await show_games_menu(message, i18n, state)
         return
 
     translation = html.escape(result.get("translation", ""))
@@ -222,7 +248,7 @@ async def _start_hangman_round(message, user_db, state, i18n):
     await send_safe_html(
         message, text,
         reply_markup=get_dynamic_reply_keyboard(
-            [_("hangman_give_up", i18n)], i18n, "back_to_learn_menu"
+            [_("hangman_give_up", i18n)], i18n, "back_to_games_menu"
         )
     )
 
@@ -241,15 +267,14 @@ async def process_hangman_letter(message: Message, state: FSMContext, user_db: d
         await message.answer(
             _("hangman_gave_up", i18n, word=word),
             reply_markup=get_dynamic_reply_keyboard(
-                [_("hangman_button", i18n)], i18n, "back_to_learn_menu"
+                [_("hangman_button", i18n)], i18n, "back_to_games_menu"
             )
         )
-        await state.set_state(AppStates.in_learning_menu)
+        await state.set_state(AppStates.in_games_menu)
         return
 
     letter = message.text.upper().strip()
 
-    # Validate input
     if len(letter) != 1 or not letter.isalpha():
         await message.answer(_("hangman_one_letter", i18n))
         return
@@ -261,9 +286,7 @@ async def process_hangman_letter(message: Message, state: FSMContext, user_db: d
     guessed.add(letter)
 
     if letter in word:
-        # Correct guess
         display = build_hangman_display(word, guessed)
-        # Check win
         if all(c in guessed for c in word):
             await increment_user_stat(message.from_user.id, "words_learned_count")
             text = (
@@ -273,10 +296,10 @@ async def process_hangman_letter(message: Message, state: FSMContext, user_db: d
             await message.answer(
                 text,
                 reply_markup=get_dynamic_reply_keyboard(
-                    [_("hangman_button", i18n)], i18n, "back_to_learn_menu"
+                    [_("hangman_button", i18n)], i18n, "back_to_games_menu"
                 )
             )
-            await state.set_state(AppStates.in_learning_menu)
+            await state.set_state(AppStates.in_games_menu)
             return
 
         await state.update_data(hangman_guessed=list(guessed))
@@ -289,7 +312,6 @@ async def process_hangman_letter(message: Message, state: FSMContext, user_db: d
             f"<i>{_('hangman_prompt', i18n, wrong=wrong, max=MAX_WRONG)}</i>"
         )
     else:
-        # Wrong guess
         wrong += 1
         await state.update_data(hangman_guessed=list(guessed), hangman_wrong=wrong)
 
@@ -302,10 +324,10 @@ async def process_hangman_letter(message: Message, state: FSMContext, user_db: d
             await send_safe_html(
                 message, text,
                 reply_markup=get_dynamic_reply_keyboard(
-                    [_("hangman_button", i18n)], i18n, "back_to_learn_menu"
+                    [_("hangman_button", i18n)], i18n, "back_to_games_menu"
                 )
             )
-            await state.set_state(AppStates.in_learning_menu)
+            await state.set_state(AppStates.in_games_menu)
             return
 
         display = build_hangman_display(word, guessed)
@@ -321,7 +343,7 @@ async def process_hangman_letter(message: Message, state: FSMContext, user_db: d
     await send_safe_html(
         message, text,
         reply_markup=get_dynamic_reply_keyboard(
-            [_("hangman_give_up", i18n)], i18n, "back_to_learn_menu"
+            [_("hangman_give_up", i18n)], i18n, "back_to_games_menu"
         )
     )
 
@@ -332,7 +354,7 @@ SPEED_ROUND_SECONDS = 30
 
 
 @games_router.message(
-    AppStates.in_learning_menu,
+    AppStates.in_games_menu,
     F.text.in_(get_all_translations("speed_round_button", all_locales))
 )
 async def handle_speed_round_start(message: Message, user_db: dict, state: FSMContext, bot: Bot):
@@ -351,6 +373,7 @@ async def handle_speed_round_start(message: Message, user_db: dict, state: FSMCo
 
     if not words or len(words) < 2:
         await message.answer(_("generation_error", i18n))
+        await show_games_menu(message, i18n, state)
         return
 
     await state.set_state(AppStates.in_speed_round)
@@ -365,7 +388,7 @@ async def handle_speed_round_start(message: Message, user_db: dict, state: FSMCo
     await message.answer(
         _("speed_round_intro", i18n, count=len(words), seconds=SPEED_ROUND_SECONDS),
         reply_markup=get_dynamic_reply_keyboard(
-            [_("speed_start", i18n)], i18n, "back_to_learn_menu"
+            [_("speed_start", i18n)], i18n, "back_to_games_menu"
         )
     )
 
@@ -394,7 +417,6 @@ async def _show_speed_word(message, i18n, state):
     remaining = max(0, SPEED_ROUND_SECONDS - int(elapsed))
 
     if index >= len(words) or remaining <= 0:
-        # Game over
         await _end_speed_round(message, i18n, state, correct, total, timed_out=(remaining <= 0))
         return
 
@@ -410,7 +432,7 @@ async def _show_speed_word(message, i18n, state):
     await message.answer(
         text,
         reply_markup=get_dynamic_reply_keyboard(
-            [_("speed_skip", i18n)], i18n, "back_to_learn_menu"
+            [_("speed_skip", i18n)], i18n, "back_to_games_menu"
         )
     )
 
@@ -445,7 +467,6 @@ async def process_speed_answer(message: Message, state: FSMContext, bot: Bot, us
     correct_translation = word_data.get("translation", "").strip().lower()
     user_answer = message.text.strip().lower()
 
-    # Fuzzy match — accept if answer contains or is contained in correct translation
     is_correct = (
         user_answer == correct_translation or
         user_answer in correct_translation or
@@ -454,7 +475,7 @@ async def process_speed_answer(message: Message, state: FSMContext, bot: Bot, us
 
     if is_correct:
         correct += 1
-        feedback = f"✅"
+        feedback = "✅"
     else:
         feedback = f"❌ → <b>{html.escape(word_data.get('translation', ''))}</b>"
 
@@ -465,7 +486,6 @@ async def process_speed_answer(message: Message, state: FSMContext, bot: Bot, us
 
 async def _end_speed_round(message, i18n, state, correct, total, timed_out):
     if correct > 0:
-        from database.db_utils import increment_user_stat
         for _ in range(correct):
             await increment_user_stat(message.from_user.id, "words_learned_count")
 
@@ -482,7 +502,7 @@ async def _end_speed_round(message, i18n, state, correct, total, timed_out):
     await message.answer(
         text,
         reply_markup=get_dynamic_reply_keyboard(
-            [_("speed_round_button", i18n)], i18n, "back_to_learn_menu"
+            [_("speed_round_button", i18n)], i18n, "back_to_games_menu"
         )
     )
-    await state.set_state(AppStates.in_learning_menu)
+    await state.set_state(AppStates.in_games_menu)

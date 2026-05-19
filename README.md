@@ -1,130 +1,146 @@
 # Arvion Lingua AI 🤖🌍
-### 🏆 Developed for *Hackathon*
 
 A powerful Telegram bot for language learning, AI-powered voice chat, and translation — built on Google Gemini AI.
 
 ---
 
-## 🚀 Hackathon Sprint Features 
-
-During the **Hackathon**, we optimized our core interactions and added a new transparency command:
-- 📊 **`/models` Command** — Real-time transparency showing the ranked priority queue of available Gemini models on the active API key and showing the dynamic self-healing status.
-- 🎤 **Gemini Voice Chat** — Send voice messages, get text + voice AI responses with Gemini transcription.
-- 🏆 **Smart Model Auto-Ranking** — Dynamic model exploration and fallback logic tailored for maximum uptime.
-
----
-
 ## Features
 
-### 🎤 Gemini Voice Chat 
-
-- Send a **voice message** in the Chat section and the bot will:
-  1. **Transcribe** your audio to text using Gemini AI
-  2. **Generate** a smart AI response
-  3. **Reply with text AND voice** (TTS in your learning language)
-- Works in both Regular Chat and Role-Play scenarios
-- Perfect for practicing pronunciation and listening skills
-
-### 🏆 Smart Model Auto-Ranking 
-The bot dynamically fetches all models available on your API key and ranks them from best to worst:
-
-| Priority | Model Family |
-|----------|-------------|
-| 1st | Gemini 3.1 Pro |
-| 2nd | Gemini 3 Pro |
-| 3rd | Gemini 2.5 Pro |
-| 4th | Gemini 2.0 Pro / 1.5 Pro |
-| 5th | Gemini 3.1 Flash |
-| 6th | Gemini 3 Flash |
-| 7th | Gemini 2.5 Flash / 2.0 Flash |
-| ... | Other available models |
-
-### 🔄 Automatic Fallback 
-
-- If the top model is unavailable (quota/error), the bot **automatically tries the next best model**
-- Works for all features: chat, translation, learning, transcription
-- No manual intervention needed
-
-### 🌐 Language Translation
-
-- Translate text between 13 supported languages
+### 🌐 Translation
+- Translate text between **13 supported languages**
 - Auto-detect source language
-- Swap source/target languages
-- Image OCR + translation (send a photo)
-- TTS pronunciation for source and translated text
+- Swap source/target languages instantly
+- **Image OCR + translation** — send a photo, get the text translated
+- TTS pronunciation for both source and translated text
 
-### 📚 Natural Language Learning
-
+### 🎓 Learn (Language Learning)
 - Adaptive levels: **A1/A2**, **B1/B2**, **C1/C2**
-- Vocabulary flash cards
-- AI-generated quizzes with instant feedback
-- Daily streak tracking
-- Progress statistics
+- **New Word** — AI-generated vocabulary with translation
+- **Quiz** — multiple choice questions with instant feedback
+- **Fill in the Blank** — sentence completion exercises
+- **Story Mode** — read a short story, then answer comprehension questions
+- **Idiom of the Day** — learn idiomatic expressions with examples
+- **Grammar Check** — submit a sentence, get AI-powered correction and explanation
+- Daily streak tracking and progress statistics
 
-### 💬 AI Chat & Role-Play
+### 🎮 Games (Separate from Learning)
+- **Word Scramble 🔀** — unscramble a word given a hint and translation
+- **Hangman 🎯** — guess the word letter by letter
+- **Speed Round ⚡** — translate as many words as possible in 30 seconds
+- All games are AI-generated and adapt to your language and level
 
-- **Regular Chat**: Open-ended conversation with Gemini
+### 🤖 Chat with AI
+- **Regular Chat** — open-ended conversation with Gemini
 - **Role-Play Scenarios**:
   - ☕ At the Cafe
   - 🏨 At the Hotel
   - 💼 Job Interview
-- Persistent chat history per user
-- Voice message support in all chat modes
+  - 🏥 At the Doctor
+  - ✈️ At the Airport
+  - 🛍️ Shopping
+- **Voice message support** — send a voice message, get a text + voice reply
+- Persistent chat history per session
+- `/summary` — AI summary of your current chat session
 
-### 🎓 Programming Language Learning
+### 🌍 Culture & Grammar
+- **Grammar Guide** (`/grammar`) — topic-based grammar lessons with rules, examples, and practice sentences; adapts to your current level
+- **Culture Corner** (`/culture`) — explore food, traditions, history, music, etiquette, landmarks, and more for your target language
 
-- 10 programming languages: Python, JavaScript, Java, C#, C++, PHP, Swift, Kotlin, SQL, Go
+### 💻 Programming Learning
+- 10 languages: Python, JavaScript, Java, C#, C++, PHP, Swift, Kotlin, SQL, Go
 - Three levels: Beginner, Intermediate, Advanced
 - Concept explanations with code examples
 - Interactive coding quizzes
 
-### 🔊 Text-to-Speech
+### 🃏 Flashcard Review (Spaced Repetition)
+- Save words to your personal vocabulary book during learning
+- `/review` — flashcard-style review with spaced repetition scheduling
+- Rate each card: Hard / OK / Easy — next review interval adjusts automatically
 
+### 🔊 Text-to-Speech
 - Converts AI responses to audio using gTTS
 - Multi-language audio support
-- Responses voiced in your selected learning language
+- Voiced in your selected learning language
 
-### 🖼️ Image Text Recognition
+### 📊 Statistics & Badges
+- Translations count, words learned, quizzes passed, facts requested
+- Daily activity streak with milestone badges
+- `/stats` — full progress overview with progress bars
+- `/leaderboard` — global top 10 by quizzes and streak
 
-- Extract and translate text from photos
-- AI-powered image analysis via Gemini
+### 🎯 Daily Challenge
+- `/challenge` — a fresh daily goal (translate X texts, learn X words, pass X quizzes)
+- Progress bar updates in real time
 
-### ⚙️ User Settings
+### 💡 Fun Facts
+- `/fact` — AI-generated fun fact about your learning language or programming language
 
+### 🏆 Smart Model Auto-Ranking & Fallback
+- The bot dynamically fetches all Gemini models available on your API key and ranks them by capability
+- If the top model hits a quota limit or error, it **automatically falls back** to the next best model
+- `/models` — see the live ranked priority queue and fallback status
+
+### ⚙️ Settings
 - Interface language (13 languages)
-- Native language selection
+- Native language
 - Learning language & level
 - Programming language & level
-- Learning mode (Human languages / Programming)
+- Learning mode (Human Languages / Programming)
 
-### 📊 Statistics & Tracking
+---
 
-- Translations count
-- Words/concepts learned
-- Quizzes passed
-- Facts requested
-- Daily activity streak
+## Bot Commands
+
+| Command | Description |
+|---------|-------------|
+| `/start` | Start the bot / restart onboarding |
+| `/menu` | Go to main menu |
+| `/stats` | Your progress and badges |
+| `/vocab` | Your saved vocabulary book |
+| `/review` | Flashcard review (spaced repetition) |
+| `/wotd` | Word of the Day |
+| `/challenge` | Today's daily challenge |
+| `/leaderboard` | Global leaderboard |
+| `/grammar` | Grammar Guide |
+| `/culture` | Culture Corner |
+| `/summary` | AI summary of current chat session |
+| `/fact` | Fun fact about your language |
+| `/models` | Active AI models and fallback status |
+| `/help` | All commands |
+
+---
+
+## Main Menu
+
+| Button | Section |
+|--------|---------|
+| 🌐 Translate | Text & image translation with TTS |
+| 🎓 Learn | Vocabulary, quizzes, stories, grammar check |
+| 🤖 Chat with AI | Text & voice conversation, role-play |
+| ⚙️ Settings | User preferences |
+| 🎮 Games | Word Scramble, Hangman, Speed Round |
+| 🌍 Culture & Grammar | Grammar lessons and culture topics |
 
 ---
 
 ## Supported Languages
 
-| Code | Language   | Code | Language   |
-|------|-----------|------|-----------|
-| en   | English   | ja   | Japanese  |
-| hy   | Armenian  | ko   | Korean    |
-| ru   | Russian   | hi   | Hindi     |
-| es   | Spanish   | ar   | Arabic    |
-| fr   | French    | de   | German    |
-| it   | Italian   | pt   | Portuguese|
-| zh   | Chinese   |      |           |
+| Code | Language    | Code | Language    |
+|------|-------------|------|-------------|
+| en   | English     | ja   | Japanese    |
+| hy   | Armenian    | ko   | Korean      |
+| ru   | Russian     | hi   | Hindi       |
+| es   | Spanish     | ar   | Arabic      |
+| fr   | French      | de   | German      |
+| it   | Italian     | pt   | Portuguese  |
+| zh   | Chinese     |      |             |
 
 ---
 
 ## Tech Stack
 
 | Component | Technology |
-|-----------|-----------|
+|-----------|------------|
 | Language | Python 3.8+ |
 | Bot Framework | aiogram 3.5.0 |
 | AI Engine | Google Generative AI (Gemini) |
@@ -132,62 +148,49 @@ The bot dynamically fetches all models available on your API key and ranks them 
 | Text-to-Speech | gTTS 2.5.1 |
 | Image Processing | Pillow 10.3.0 |
 
-### Dependencies
-
-```
-aiogram==3.5.0
-python-dotenv==1.0.1
-google-generativeai==0.5.4
-gTTS==2.5.1
-aiosqlite==0.20.0
-Pillow==10.3.0
-aiohttp-socks
-```
-
 ---
 
 ## Project Structure
 
 ```
 Arvion_Lingua_AI/
-├── main.py                 # Bot entry point & router setup
-├── config.py               # Configuration and constants
-├── requirements.txt        # Python dependencies
-├── .env                    # Environment variables (not tracked)
+├── main.py                        # Bot entry point & router setup
+├── config.py                      # Configuration and constants
+├── requirements.txt               # Python dependencies
+├── .env                           # Environment variables (not tracked)
 ├── bot/
-│   ├── handlers/           # Message and callback handlers
-│   │   ├── chat_handlers.py        # Chat + Voice Chat handler
-│   │   ├── common_handlers.py
-│   │   ├── learning_handlers.py
-│   │   ├── settings_handlers.py
-│   │   ├── translate_handlers.py
-│   │   └── __init__.py
-│   ├── keyboards/          # Telegram keyboards
+│   ├── handlers/
+│   │   ├── common_handlers.py     # /start, /menu, /stats, /fact, /models, /help
+│   │   ├── onboarding_handlers.py # First-run setup flow
+│   │   ├── translate_handlers.py  # Translation + image OCR
+│   │   ├── learning_handlers.py   # Word, quiz, fill-blank, story, idiom, grammar check
+│   │   ├── games_handlers.py      # Word Scramble, Hangman, Speed Round
+│   │   ├── culture_grammar_handlers.py  # Grammar Guide + Culture Corner
+│   │   ├── chat_handlers.py       # Chat + voice + role-play
+│   │   ├── settings_handlers.py   # User settings
+│   │   ├── vocab_handlers.py      # Vocabulary book
+│   │   ├── flashcard_handlers.py  # Spaced repetition review
+│   │   ├── pronunciation_handlers.py
+│   │   └── extra_handlers.py      # /leaderboard, /challenge, /wotd, /summary, inline
+│   ├── keyboards/
 │   │   ├── inline.py
-│   │   ├── reply.py
-│   │   └── __init__.py
+│   │   └── reply.py
 │   ├── middlewares/
-│   │   ├── localization.py # i18n / multi-language support
-│   │   └── __init__.py
+│   │   └── localization.py        # i18n / multi-language support
 │   ├── services/
-│   │   ├── gemini_service.py   # Gemini AI + model ranking + transcription
-│   │   ├── tts_service.py      # Text-to-Speech
-│   │   └── __init__.py
+│   │   ├── gemini_service.py      # Gemini AI, model ranking, transcription
+│   │   └── tts_service.py         # Text-to-Speech
 │   ├── states/
-│   │   ├── app_states.py   # FSM states
-│   │   └── __init__.py
-│   ├── utils/
-│   │   ├── message_utils.py
-│   │   └── __init__.py
-│   └── __init__.py
+│   │   └── app_states.py          # FSM states
+│   └── utils/
+│       └── message_utils.py
 ├── database/
-│   ├── db_utils.py
-│   └── __init__.py
-└── locales/                # i18n translation files
-    ├── ar.json  ├── de.json  ├── en.json  ├── es.json
-    ├── fr.json  ├── hi.json  ├── hy.json  ├── it.json
-    ├── ja.json  ├── ko.json  ├── pt.json  ├── ru.json
-    └── zh.json
+│   └── db_utils.py
+└── locales/                       # i18n translation files (13 languages)
+    ├── en.json  ├── hy.json  ├── ru.json  ├── es.json
+    ├── fr.json  ├── de.json  ├── it.json  ├── pt.json
+    ├── zh.json  ├── ja.json  ├── ko.json  ├── hi.json
+    └── ar.json
 ```
 
 ---
@@ -196,9 +199,9 @@ Arvion_Lingua_AI/
 
 ### Prerequisites
 
-- Python 3.8 or higher
-- Telegram Bot Token (from [@BotFather](https://t.me/BotFather))
-- Google Gemini API Key (from [Google AI Studio](https://aistudio.google.com/))
+- Python 3.8+
+- Telegram Bot Token — from [@BotFather](https://t.me/BotFather)
+- Google Gemini API Key — from [Google AI Studio](https://aistudio.google.com/)
 
 ### Steps
 
@@ -224,7 +227,7 @@ Arvion_Lingua_AI/
    TELEGRAM_BOT_TOKEN=your_telegram_bot_token_here
    GEMINI_API_KEY=your_gemini_api_key_here
    DB_NAME=lingua_ai_bot.db
-   GEMINI_MODEL=gemini-2.5-flash
+   GEMINI_MODEL=gemini-flash-latest
    ```
 
 5. **Run the bot**
@@ -232,7 +235,7 @@ Arvion_Lingua_AI/
    python main.py
    ```
 
-> ⚠️ **Important:** Make sure only **one instance** of the bot is running. If you need to restart:
+> ⚠️ Make sure only **one instance** of the bot is running at a time.
 > ```bash
 > pkill -9 -f "python3 main.py"
 > python main.py
@@ -242,92 +245,25 @@ Arvion_Lingua_AI/
 
 ## Environment Variables
 
-| Variable | Description | Default |
-|----------|------------|---------|
-| `TELEGRAM_BOT_TOKEN` | Your Telegram bot token | Required |
-| `GEMINI_API_KEY` | Google Gemini API key | Required |
-| `DB_NAME` | SQLite database filename | `lingua_ai_bot.db` |
-| `GEMINI_MODEL` | Default/fallback Gemini model | `gemini-2.5-flash` |
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `TELEGRAM_BOT_TOKEN` | Your Telegram bot token | ✅ |
+| `GEMINI_API_KEY` | Google Gemini API key | ✅ |
+| `DB_NAME` | SQLite database filename | optional |
+| `GEMINI_MODEL` | Default/fallback Gemini model | optional |
 
 ---
 
 ## Database Schema
 
-### Users Table
-- `user_id` — Telegram user ID (Primary Key)
-- `interface_lang` — Bot interface language
-- `native_lang` — User's native language
-- `learning_lang` — Language being learned
-- `learning_level` — Current learning level
-- `programming_lang` — Preferred programming language
-- `programming_level` — Programming skill level
-- `learning_mode` — Learning mode (human / programming)
-- `translations_count`, `words_learned_count`, `quizzes_passed_count`, `facts_requested_count`, `streak_count`
-- `last_activity_date` — Last interaction date
+**Users table** — stores per-user settings and stats:
+`user_id`, `interface_lang`, `native_lang`, `learning_lang`, `learning_level`, `programming_lang`, `programming_level`, `learning_mode`, `translations_count`, `words_learned_count`, `quizzes_passed_count`, `facts_requested_count`, `streak_count`, `last_activity_date`, `onboarding_complete`
 
-### Chat History Table
-- `id` — Record ID (Auto-increment)
-- `user_id` — Foreign Key to users
-- `role` — Message role (`user` / `model`)
-- `content` — Message content
-- `timestamp` — Message timestamp
+**Chat history table** — stores conversation context:
+`id`, `user_id`, `role` (user/model), `content`, `timestamp`
 
----
-
-## Usage
-
-### Commands
-
-| Command | Description |
-|---------|------------|
-| `/start` | Initialize bot and create user profile |
-| `/settings` | Configure language preferences |
-| `/stats` | View your learning statistics |
-| `/fact` | Get a fun cultural or tech fact |
-| `/models` | View ranked Gemini models list & active status |
-| `/reset` | Clear current chat history |
-
-### Main Menu Buttons
-
-| Button | Feature |
-|--------|---------|
-| 🌐 Translate | Text & image translation |
-| 🎓 Learn | Language / programming exercises |
-| 🤖 Chat with AI | Text & **voice** conversation |
-| ⚙️ Settings | User preferences |
-
-### 🎤 How to Use Voice Chat
-
-1. Open the bot → Tap **🤖 Chat with AI**
-2. Send a **voice message** 🎙️
-3. The bot will:
-   - Show `🎤...` while processing
-   - Display: `You: [your transcribed text]` + AI reply
-   - Send back a **voice message** with the response
-4. Works in regular chat and all role-play scenarios!
-
----
-
-## Key Components
-
-### GeminiService
-
-- **`_initialize_models()`** — Fetches all API-available models and ranks them by capability
-- **`_safe_generate()`** — Tries models in order; falls back automatically on failure
-- **`chat_with_ai()`** — Context-aware chat with full history and fallback
-- **`transcribe_audio()`** — Transcribes voice messages to text using multimodal Gemini
-- **`translate_text()`** — Language translation
-- **`get_learning_item()`** — Generates vocabulary, concepts, quizzes
-
----
-
-## Error Handling
-
-- **API failures** gracefully fall back to the next best model
-- **Quota exhausted (429)** — bot tries alternative models automatically
-- **Transcription failures** — user receives a clear localized error message
-- **Database errors** — logged, user sees a friendly message
-- **Conflict errors** — ensure only one bot instance runs at a time
+**Vocabulary table** — saved words per user:
+`id`, `user_id`, `word`, `translation`, `language`, `next_review`, `review_count`, `ease_factor`
 
 ---
 
@@ -335,40 +271,24 @@ Arvion_Lingua_AI/
 
 ### Adding a New Language
 1. Add the language code to `SUPPORTED_LANGUAGES` in `config.py`
-2. Create a `locales/<code>.json` file following the structure of `en.json`
-3. Add the new locale keys: `could_not_understand_audio`, `voice_error`, etc.
+2. Create `locales/<code>.json` following the structure of `en.json`
 
 ### Adding a New Feature
 1. Create a handler in `bot/handlers/`
 2. Add FSM states in `bot/states/app_states.py` if needed
-3. Create keyboards in `bot/keyboards/` if needed
-4. Register the router in `main.py`
+3. Register the router in `main.py`
 
 ---
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/AmazingFeature`
-3. Commit changes: `git commit -m 'Add AmazingFeature'`
-4. Push: `git push origin feature/AmazingFeature`
-5. Open a Pull Request
-
----
-
-## License
-
-This project is provided as-is for educational and personal use.
 
 ## Acknowledgments
 
-- [aiogram](https://github.com/aiogram/aiogram) — Modern Telegram Bot API framework
+- [aiogram](https://github.com/aiogram/aiogram) — Telegram Bot API framework
 - [Google Generative AI](https://ai.google.dev/) — Gemini AI models
 - [gTTS](https://github.com/pndurette/gTTS) — Text-to-Speech
 
 ---
 
-**Version**: 2.0.0
+**Version**: 2.1.0
 **Last Updated**: May 2026
 **Status**: Active Development
 **Bot**: [@Arvion_Lingua_AI_Bot](https://t.me/Arvion_Lingua_AI_Bot)

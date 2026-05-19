@@ -41,9 +41,6 @@ async def show_learning_menu(message: Message, i18n: dict, user_db: dict, state:
             i18n.get('story_mode_button'),
             i18n.get('idiom_button'),
             i18n.get('grammar_check_button'),
-            i18n.get('scramble_button'),
-            i18n.get('hangman_button'),
-            i18n.get('speed_round_button'),
         ]
     else:
         lang_name = SUPPORTED_PROGRAMMING_LANGUAGES[user_db['programming_lang']]['display_name']

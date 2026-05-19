@@ -46,6 +46,7 @@ class AppStates(StatesGroup):
     awaiting_fill_blank_answer = State()
 
     # Game states
+    in_games_menu = State()
     in_word_scramble = State()
     awaiting_scramble_answer = State()
     in_hangman = State()
